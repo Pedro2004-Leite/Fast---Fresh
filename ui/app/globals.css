@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+/*
+ * Tokens do design (design/tokens/tokens.json). Cor só para a gravidade; sem azul.
+ * Os componentes usam estes nomes (bg-sheet, text-ink-secondary, bg-sev-critical...) e nunca hexadecimais.
+ */
+@theme {
+  --color-ground: #d9dbdc;
+  --color-sheet: #f5f6f6;
+  --color-chip: #e5e7e8;
+  --color-map: #ffffff;
+  --color-track-segmented: #c7cacb;
+  --color-track-bar: #dadcdd;
+  --color-ink: #27282a;
+  --color-ink-secondary: #585b5e;
+  --color-ink-sub: #3a3c3e;
+  --color-ink-on: #f5f6f6;
+  --color-cell: #c4c7c8;
+  --color-done: #3db06a;
+  --color-level-active: #1f4e8c;
+  --color-bar: #4a4d50;
+  --color-bar-ink: #ffffff;
+  --color-dot: #6e7173;
+  --color-divider: rgb(39 40 42 / 0.14);
+  --color-sev-critical: #d8322b;
+  --color-sev-critical-ink: #ffffff;
+  --color-sev-high: #f28c1f;
+  --color-sev-high-ink: #27282a;
+  --color-sev-medium: #ffd21f;
+  --color-sev-medium-ink: #27282a;
+
+  --font-sans: var(--font-hanken), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), monospace;
+
+  --radius-sheet: 24px;
+  --radius-card: 20px;
+  --radius-chip: 14px;
+  --radius-segmented: 16px;
+  --radius-segmented-item: 12px;
+  --radius-badge: 12px;
+  --radius-tag: 6px;
+  --radius-cell: 2px;
+
+  --spacing-gutter: 16px;
+  --spacing-header: 56px;
+  --spacing-chip: 56px;
+  --spacing-row: 56px;
+  --spacing-touch: 44px;
+  --spacing-button: 48px;
+  --spacing-button-primary: 56px;
+
+  --shadow-sheet: 0 -6px 24px rgb(39 40 42 / 0.16);
+
+  --text-title-b: 28px;
+  --text-title-b--line-height: 1.1;
+  --text-title-c: 26px;
+  --text-title-c--line-height: 1.08;
+  --text-product-card: 19px;
+  --text-product-card--line-height: 1.15;
+  --text-staff: 17px;
+  --text-staff--line-height: 1.1;
+  --text-product: 15px;
+  --text-product--line-height: 1.2;
+  --text-button: 14px;
+  --text-message: 13px;
+  --text-message--line-height: 1.25;
+  --text-secondary: 12px;
+  --text-mono-id: 11px;
+  --text-module: 13px;
+  --text-count: 18px;
+  --text-percent: 24px;
+
+  --animate-ring: ss-ring 1.8s ease-out infinite;
+  --animate-user-pulse: ss-pulse 2s ease-out infinite;
+
+  @keyframes ss-ring {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgb(216 50 43 / 0.55);
+    }
+    50% {
+      box-shadow: 0 0 0 6px rgb(216 50 43 / 0);
+    }
+  }
+  @keyframes ss-pulse {
+    0% {
+      transform: scale(0.7);
+      opacity: 0.6;
+    }
+    100% {
+      transform: scale(2.2);
+      opacity: 0;
+    }
+  }
+}
+
+/*
+ * Usados só em estilos inline (var(--color-...)), por isso o Tailwind não os veria: "static" garante que são emitidos.
+ * Modo Nível do mapa: o azul sobe como num depósito; "sem leitura" fica às riscas.
+ */
+@theme static {
+  --color-level-fill: #2f6db5;
+  --color-level-base: #dde3ec;
+  --color-hatch-a: #bfc3c6;
+  --color-hatch-b: #e9ebec;
+}
+
+body {
+  line-height: normal; /* o design não define line-height global (o preflight do Tailwind poria 1.5) */
+  background: var(--color-ground);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+button:focus-visible {
+  outline: 3px solid var(--color-ink);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px var(--color-sheet);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+  }
+}

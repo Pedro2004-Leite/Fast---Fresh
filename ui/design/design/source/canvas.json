@@ -1,0 +1,55 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Lista.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "B · Lista + mini-mapa",
+      "w": 390,
+      "x": 470,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "A · Mapa + avisos",
+      "w": 390,
+      "x": 0,
+      "y": 0
+    },
+    "Tarefa.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "C · Próxima tarefa",
+      "w": 390,
+      "x": 940,
+      "y": 0
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-10T17:00:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "t1": {
+      "kind": "title1",
+      "maxW": 1330,
+      "text": "Alertas de loja · 3 direções de UI",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Lista.dc.html",
+    "Tarefa.dc.html"
+  ],
+  "pages": [],
+  "title": "Alertas de loja autónoma"
+}

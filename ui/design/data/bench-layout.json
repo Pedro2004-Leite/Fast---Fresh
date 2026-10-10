@@ -1,0 +1,1226 @@
+{
+  "_nota": "Coordenadas em px relativas ao canto da ilha (island.x, island.y no mapa de 390x480). Cada retângulo = 1 classe de classes.json = 1 area_id (câmara_nº). A ligação classe <-> câmara é inventada para o demo.",
+  "geometry": {
+    "unit": "px",
+    "map": {
+      "w": 390,
+      "h": 480
+    },
+    "island": {
+      "x": 119,
+      "y": 40,
+      "w": 152,
+      "h": 400
+    },
+    "gap_cells": 2,
+    "gap_modules": 4,
+    "cap_h": 60,
+    "module_h": 88,
+    "spine_w": 20,
+    "block_w": 64,
+    "cap_w": 130,
+    "user_position": {
+      "x": 60,
+      "y": 240
+    },
+    "aisle_b_x": 330,
+    "cross_passage_y": {
+      "top": 20,
+      "bottom": 460
+    },
+    "meters_per_px": 0.03
+  },
+  "spines": [
+    {
+      "module": 1,
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 20,
+        "h": 60
+      }
+    },
+    {
+      "module": 2,
+      "rect": {
+        "x": 66,
+        "y": 64,
+        "w": 20,
+        "h": 88
+      }
+    },
+    {
+      "module": 3,
+      "rect": {
+        "x": 66,
+        "y": 156,
+        "w": 20,
+        "h": 88
+      }
+    },
+    {
+      "module": 4,
+      "rect": {
+        "x": 66,
+        "y": 248,
+        "w": 20,
+        "h": 88
+      }
+    },
+    {
+      "module": 5,
+      "rect": {
+        "x": 0,
+        "y": 340,
+        "w": 20,
+        "h": 60
+      }
+    }
+  ],
+  "faces": [
+    {
+      "module": 1,
+      "side": "end",
+      "label": "Citrinos",
+      "cols": 2,
+      "rows": 2,
+      "rect": {
+        "x": 22,
+        "y": 0,
+        "w": 130,
+        "h": 60
+      },
+      "cameras": [
+        {
+          "camera_id": "6215",
+          "class_keys": [
+            "oranges",
+            "packaged oranges",
+            "lemons",
+            "limes"
+          ]
+        }
+      ]
+    },
+    {
+      "module": 2,
+      "side": "A",
+      "label": "Maçãs, peras e embalados",
+      "cols": 2,
+      "rows": 3,
+      "rect": {
+        "x": 0,
+        "y": 64,
+        "w": 64,
+        "h": 88
+      },
+      "cameras": [
+        {
+          "camera_id": "6373",
+          "class_keys": [
+            "apples",
+            "packaged apples",
+            "pears"
+          ]
+        },
+        {
+          "camera_id": "6385",
+          "class_keys": [
+            "packaged cherries",
+            "packaged dragon fruits",
+            "packaged passion fruits"
+          ]
+        }
+      ]
+    },
+    {
+      "module": 2,
+      "side": "B",
+      "label": "Folhas e couves",
+      "cols": 2,
+      "rows": 5,
+      "rect": {
+        "x": 88,
+        "y": 64,
+        "w": 64,
+        "h": 88
+      },
+      "cameras": [
+        {
+          "camera_id": "6383",
+          "class_keys": [
+            "packaged lettuce",
+            "collard greens",
+            "green beans",
+            "cucumbers",
+            "eggplants"
+          ]
+        },
+        {
+          "camera_id": "6386",
+          "class_keys": [
+            "broccoli",
+            "cabbages",
+            "red cabbages",
+            "cauliflower",
+            "zucchini"
+          ]
+        }
+      ]
+    },
+    {
+      "module": 3,
+      "side": "A",
+      "label": "Kiwis e fruta de caroço",
+      "cols": 2,
+      "rows": 3,
+      "rect": {
+        "x": 0,
+        "y": 156,
+        "w": 64,
+        "h": 88
+      },
+      "cameras": [
+        {
+          "camera_id": "6376",
+          "class_keys": [
+            "kiwis",
+            "packaged kiwis",
+            "avocados"
+          ]
+        },
+        {
+          "camera_id": "6491",
+          "class_keys": [
+            "apricots",
+            "peaches",
+            "nectarines"
+          ]
+        }
+      ]
+    },
+    {
+      "module": 3,
+      "side": "B",
+      "label": "Tomates, pimentos e cebolas",
+      "cols": 3,
+      "rows": 3,
+      "rect": {
+        "x": 88,
+        "y": 156,
+        "w": 64,
+        "h": 88
+      },
+      "cameras": [
+        {
+          "camera_id": "6443",
+          "class_keys": [
+            "tomatoes",
+            "packaged tomatoes",
+            "packaged cherry tomatoes",
+            "green peppers",
+            "red peppers"
+          ]
+        },
+        {
+          "camera_id": "6594",
+          "class_keys": [
+            "onions",
+            "red onions",
+            "garlic",
+            "packaged garlic"
+          ]
+        }
+      ]
+    },
+    {
+      "module": 4,
+      "side": "A",
+      "label": "Melões e uvas",
+      "cols": 2,
+      "rows": 3,
+      "rect": {
+        "x": 0,
+        "y": 248,
+        "w": 64,
+        "h": 88
+      },
+      "cameras": [
+        {
+          "camera_id": "6371",
+          "class_keys": [
+            "melons",
+            "watermelons",
+            "packaged strawberries"
+          ]
+        },
+        {
+          "camera_id": "6462",
+          "class_keys": [
+            "green grapes",
+            "red grapes",
+            "packaged green grapes"
+          ]
+        }
+      ]
+    },
+    {
+      "module": 4,
+      "side": "B",
+      "label": "Batatas e raízes",
+      "cols": 3,
+      "rows": 3,
+      "rect": {
+        "x": 88,
+        "y": 248,
+        "w": 64,
+        "h": 88
+      },
+      "cameras": [
+        {
+          "camera_id": "6591",
+          "class_keys": [
+            "potatoes",
+            "sweet potatoes",
+            "packaged potatoes",
+            "ginger",
+            "pumpkins"
+          ]
+        },
+        {
+          "camera_id": "6781",
+          "class_keys": [
+            "packaged onions",
+            "packaged red onions",
+            "packaged shallots",
+            "chayotes"
+          ]
+        }
+      ]
+    },
+    {
+      "module": 5,
+      "side": "end",
+      "label": "Fruta tropical",
+      "cols": 3,
+      "rows": 2,
+      "rect": {
+        "x": 22,
+        "y": 340,
+        "w": 130,
+        "h": 60
+      },
+      "cameras": [
+        {
+          "camera_id": "6468",
+          "class_keys": [
+            "pineapples",
+            "papayas",
+            "mangoes",
+            "guavas",
+            "bananas",
+            "passion fruits"
+          ]
+        }
+      ]
+    }
+  ],
+  "cells": [
+    {
+      "area_id": "6215_1",
+      "camera_id": "6215",
+      "module": 1,
+      "side": "end",
+      "class_key": "oranges",
+      "nome_pt": "Laranja",
+      "row": 0,
+      "col": 0,
+      "rect": {
+        "x": 22,
+        "y": 0,
+        "w": 64,
+        "h": 29
+      }
+    },
+    {
+      "area_id": "6215_2",
+      "camera_id": "6215",
+      "module": 1,
+      "side": "end",
+      "class_key": "packaged oranges",
+      "nome_pt": "Laranja (embalada)",
+      "row": 0,
+      "col": 1,
+      "rect": {
+        "x": 88,
+        "y": 0,
+        "w": 64,
+        "h": 29
+      }
+    },
+    {
+      "area_id": "6215_3",
+      "camera_id": "6215",
+      "module": 1,
+      "side": "end",
+      "class_key": "lemons",
+      "nome_pt": "Limão",
+      "row": 1,
+      "col": 0,
+      "rect": {
+        "x": 22,
+        "y": 31,
+        "w": 64,
+        "h": 29
+      }
+    },
+    {
+      "area_id": "6215_4",
+      "camera_id": "6215",
+      "module": 1,
+      "side": "end",
+      "class_key": "limes",
+      "nome_pt": "Lima",
+      "row": 1,
+      "col": 1,
+      "rect": {
+        "x": 88,
+        "y": 31,
+        "w": 64,
+        "h": 29
+      }
+    },
+    {
+      "area_id": "6373_1",
+      "camera_id": "6373",
+      "module": 2,
+      "side": "A",
+      "class_key": "apples",
+      "nome_pt": "Maçã",
+      "row": 0,
+      "col": 0,
+      "rect": {
+        "x": 0,
+        "y": 64,
+        "w": 31,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6373_2",
+      "camera_id": "6373",
+      "module": 2,
+      "side": "A",
+      "class_key": "packaged apples",
+      "nome_pt": "Maçã (embalada)",
+      "row": 0,
+      "col": 1,
+      "rect": {
+        "x": 33,
+        "y": 64,
+        "w": 31,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6373_3",
+      "camera_id": "6373",
+      "module": 2,
+      "side": "A",
+      "class_key": "pears",
+      "nome_pt": "Pera",
+      "row": 1,
+      "col": 0,
+      "rect": {
+        "x": 0,
+        "y": 94,
+        "w": 31,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6385_1",
+      "camera_id": "6385",
+      "module": 2,
+      "side": "A",
+      "class_key": "packaged cherries",
+      "nome_pt": "Cereja (embalada)",
+      "row": 1,
+      "col": 1,
+      "rect": {
+        "x": 33,
+        "y": 94,
+        "w": 31,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6385_2",
+      "camera_id": "6385",
+      "module": 2,
+      "side": "A",
+      "class_key": "packaged dragon fruits",
+      "nome_pt": "Pitaya (embalada)",
+      "row": 2,
+      "col": 0,
+      "rect": {
+        "x": 0,
+        "y": 124,
+        "w": 31,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6385_3",
+      "camera_id": "6385",
+      "module": 2,
+      "side": "A",
+      "class_key": "packaged passion fruits",
+      "nome_pt": "Maracujá (embalada)",
+      "row": 2,
+      "col": 1,
+      "rect": {
+        "x": 33,
+        "y": 124,
+        "w": 31,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6383_1",
+      "camera_id": "6383",
+      "module": 2,
+      "side": "B",
+      "class_key": "packaged lettuce",
+      "nome_pt": "Alface (embalada)",
+      "row": 0,
+      "col": 0,
+      "rect": {
+        "x": 88,
+        "y": 64,
+        "w": 31,
+        "h": 16
+      }
+    },
+    {
+      "area_id": "6383_2",
+      "camera_id": "6383",
+      "module": 2,
+      "side": "B",
+      "class_key": "collard greens",
+      "nome_pt": "Couve portuguesa",
+      "row": 0,
+      "col": 1,
+      "rect": {
+        "x": 121,
+        "y": 64,
+        "w": 31,
+        "h": 16
+      }
+    },
+    {
+      "area_id": "6383_3",
+      "camera_id": "6383",
+      "module": 2,
+      "side": "B",
+      "class_key": "green beans",
+      "nome_pt": "Feijão verde",
+      "row": 1,
+      "col": 0,
+      "rect": {
+        "x": 88,
+        "y": 82,
+        "w": 31,
+        "h": 16
+      }
+    },
+    {
+      "area_id": "6383_4",
+      "camera_id": "6383",
+      "module": 2,
+      "side": "B",
+      "class_key": "cucumbers",
+      "nome_pt": "Pepino",
+      "row": 1,
+      "col": 1,
+      "rect": {
+        "x": 121,
+        "y": 82,
+        "w": 31,
+        "h": 16
+      }
+    },
+    {
+      "area_id": "6383_5",
+      "camera_id": "6383",
+      "module": 2,
+      "side": "B",
+      "class_key": "eggplants",
+      "nome_pt": "Beringela",
+      "row": 2,
+      "col": 0,
+      "rect": {
+        "x": 88,
+        "y": 100,
+        "w": 31,
+        "h": 16
+      }
+    },
+    {
+      "area_id": "6386_1",
+      "camera_id": "6386",
+      "module": 2,
+      "side": "B",
+      "class_key": "broccoli",
+      "nome_pt": "Brócolos",
+      "row": 2,
+      "col": 1,
+      "rect": {
+        "x": 121,
+        "y": 100,
+        "w": 31,
+        "h": 16
+      }
+    },
+    {
+      "area_id": "6386_2",
+      "camera_id": "6386",
+      "module": 2,
+      "side": "B",
+      "class_key": "cabbages",
+      "nome_pt": "Couve branca",
+      "row": 3,
+      "col": 0,
+      "rect": {
+        "x": 88,
+        "y": 118,
+        "w": 31,
+        "h": 16
+      }
+    },
+    {
+      "area_id": "6386_3",
+      "camera_id": "6386",
+      "module": 2,
+      "side": "B",
+      "class_key": "red cabbages",
+      "nome_pt": "Couve roxa",
+      "row": 3,
+      "col": 1,
+      "rect": {
+        "x": 121,
+        "y": 118,
+        "w": 31,
+        "h": 16
+      }
+    },
+    {
+      "area_id": "6386_4",
+      "camera_id": "6386",
+      "module": 2,
+      "side": "B",
+      "class_key": "cauliflower",
+      "nome_pt": "Couve-flor",
+      "row": 4,
+      "col": 0,
+      "rect": {
+        "x": 88,
+        "y": 136,
+        "w": 31,
+        "h": 16
+      }
+    },
+    {
+      "area_id": "6386_5",
+      "camera_id": "6386",
+      "module": 2,
+      "side": "B",
+      "class_key": "zucchini",
+      "nome_pt": "Curgete",
+      "row": 4,
+      "col": 1,
+      "rect": {
+        "x": 121,
+        "y": 136,
+        "w": 31,
+        "h": 16
+      }
+    },
+    {
+      "area_id": "6376_1",
+      "camera_id": "6376",
+      "module": 3,
+      "side": "A",
+      "class_key": "kiwis",
+      "nome_pt": "Kiwi",
+      "row": 0,
+      "col": 0,
+      "rect": {
+        "x": 0,
+        "y": 156,
+        "w": 31,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6376_2",
+      "camera_id": "6376",
+      "module": 3,
+      "side": "A",
+      "class_key": "packaged kiwis",
+      "nome_pt": "Kiwi (embalada)",
+      "row": 0,
+      "col": 1,
+      "rect": {
+        "x": 33,
+        "y": 156,
+        "w": 31,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6376_3",
+      "camera_id": "6376",
+      "module": 3,
+      "side": "A",
+      "class_key": "avocados",
+      "nome_pt": "Abacate",
+      "row": 1,
+      "col": 0,
+      "rect": {
+        "x": 0,
+        "y": 186,
+        "w": 31,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6491_1",
+      "camera_id": "6491",
+      "module": 3,
+      "side": "A",
+      "class_key": "apricots",
+      "nome_pt": "Alperce",
+      "row": 1,
+      "col": 1,
+      "rect": {
+        "x": 33,
+        "y": 186,
+        "w": 31,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6491_2",
+      "camera_id": "6491",
+      "module": 3,
+      "side": "A",
+      "class_key": "peaches",
+      "nome_pt": "Pêssego",
+      "row": 2,
+      "col": 0,
+      "rect": {
+        "x": 0,
+        "y": 216,
+        "w": 31,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6491_3",
+      "camera_id": "6491",
+      "module": 3,
+      "side": "A",
+      "class_key": "nectarines",
+      "nome_pt": "Nectarina",
+      "row": 2,
+      "col": 1,
+      "rect": {
+        "x": 33,
+        "y": 216,
+        "w": 31,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6443_1",
+      "camera_id": "6443",
+      "module": 3,
+      "side": "B",
+      "class_key": "tomatoes",
+      "nome_pt": "Tomate",
+      "row": 0,
+      "col": 0,
+      "rect": {
+        "x": 88,
+        "y": 156,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6443_2",
+      "camera_id": "6443",
+      "module": 3,
+      "side": "B",
+      "class_key": "packaged tomatoes",
+      "nome_pt": "Tomate (embalada)",
+      "row": 0,
+      "col": 1,
+      "rect": {
+        "x": 110,
+        "y": 156,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6443_3",
+      "camera_id": "6443",
+      "module": 3,
+      "side": "B",
+      "class_key": "packaged cherry tomatoes",
+      "nome_pt": "Tomate cherry (embalada)",
+      "row": 0,
+      "col": 2,
+      "rect": {
+        "x": 132,
+        "y": 156,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6443_4",
+      "camera_id": "6443",
+      "module": 3,
+      "side": "B",
+      "class_key": "green peppers",
+      "nome_pt": "Pimento verde",
+      "row": 1,
+      "col": 0,
+      "rect": {
+        "x": 88,
+        "y": 186,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6443_5",
+      "camera_id": "6443",
+      "module": 3,
+      "side": "B",
+      "class_key": "red peppers",
+      "nome_pt": "Pimento vermelho",
+      "row": 1,
+      "col": 1,
+      "rect": {
+        "x": 110,
+        "y": 186,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6594_1",
+      "camera_id": "6594",
+      "module": 3,
+      "side": "B",
+      "class_key": "onions",
+      "nome_pt": "Cebola",
+      "row": 1,
+      "col": 2,
+      "rect": {
+        "x": 132,
+        "y": 186,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6594_2",
+      "camera_id": "6594",
+      "module": 3,
+      "side": "B",
+      "class_key": "red onions",
+      "nome_pt": "Cebola roxa",
+      "row": 2,
+      "col": 0,
+      "rect": {
+        "x": 88,
+        "y": 216,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6594_3",
+      "camera_id": "6594",
+      "module": 3,
+      "side": "B",
+      "class_key": "garlic",
+      "nome_pt": "Alho",
+      "row": 2,
+      "col": 1,
+      "rect": {
+        "x": 110,
+        "y": 216,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6594_4",
+      "camera_id": "6594",
+      "module": 3,
+      "side": "B",
+      "class_key": "packaged garlic",
+      "nome_pt": "Alho (embalada)",
+      "row": 2,
+      "col": 2,
+      "rect": {
+        "x": 132,
+        "y": 216,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6371_1",
+      "camera_id": "6371",
+      "module": 4,
+      "side": "A",
+      "class_key": "melons",
+      "nome_pt": "Melão",
+      "row": 0,
+      "col": 0,
+      "rect": {
+        "x": 0,
+        "y": 248,
+        "w": 31,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6371_2",
+      "camera_id": "6371",
+      "module": 4,
+      "side": "A",
+      "class_key": "watermelons",
+      "nome_pt": "Melancia",
+      "row": 0,
+      "col": 1,
+      "rect": {
+        "x": 33,
+        "y": 248,
+        "w": 31,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6371_3",
+      "camera_id": "6371",
+      "module": 4,
+      "side": "A",
+      "class_key": "packaged strawberries",
+      "nome_pt": "Morango (embalada)",
+      "row": 1,
+      "col": 0,
+      "rect": {
+        "x": 0,
+        "y": 278,
+        "w": 31,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6462_1",
+      "camera_id": "6462",
+      "module": 4,
+      "side": "A",
+      "class_key": "green grapes",
+      "nome_pt": "Uva branca",
+      "row": 1,
+      "col": 1,
+      "rect": {
+        "x": 33,
+        "y": 278,
+        "w": 31,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6462_2",
+      "camera_id": "6462",
+      "module": 4,
+      "side": "A",
+      "class_key": "red grapes",
+      "nome_pt": "Uva vermelha",
+      "row": 2,
+      "col": 0,
+      "rect": {
+        "x": 0,
+        "y": 308,
+        "w": 31,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6462_3",
+      "camera_id": "6462",
+      "module": 4,
+      "side": "A",
+      "class_key": "packaged green grapes",
+      "nome_pt": "Uva branca (embalada)",
+      "row": 2,
+      "col": 1,
+      "rect": {
+        "x": 33,
+        "y": 308,
+        "w": 31,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6591_1",
+      "camera_id": "6591",
+      "module": 4,
+      "side": "B",
+      "class_key": "potatoes",
+      "nome_pt": "Batata",
+      "row": 0,
+      "col": 0,
+      "rect": {
+        "x": 88,
+        "y": 248,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6591_2",
+      "camera_id": "6591",
+      "module": 4,
+      "side": "B",
+      "class_key": "sweet potatoes",
+      "nome_pt": "Batata-doce",
+      "row": 0,
+      "col": 1,
+      "rect": {
+        "x": 110,
+        "y": 248,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6591_3",
+      "camera_id": "6591",
+      "module": 4,
+      "side": "B",
+      "class_key": "packaged potatoes",
+      "nome_pt": "Batata (embalada)",
+      "row": 0,
+      "col": 2,
+      "rect": {
+        "x": 132,
+        "y": 248,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6591_4",
+      "camera_id": "6591",
+      "module": 4,
+      "side": "B",
+      "class_key": "ginger",
+      "nome_pt": "Gengibre",
+      "row": 1,
+      "col": 0,
+      "rect": {
+        "x": 88,
+        "y": 278,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6591_5",
+      "camera_id": "6591",
+      "module": 4,
+      "side": "B",
+      "class_key": "pumpkins",
+      "nome_pt": "Abóbora",
+      "row": 1,
+      "col": 1,
+      "rect": {
+        "x": 110,
+        "y": 278,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6781_1",
+      "camera_id": "6781",
+      "module": 4,
+      "side": "B",
+      "class_key": "packaged onions",
+      "nome_pt": "Cebola (embalada)",
+      "row": 1,
+      "col": 2,
+      "rect": {
+        "x": 132,
+        "y": 278,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6781_2",
+      "camera_id": "6781",
+      "module": 4,
+      "side": "B",
+      "class_key": "packaged red onions",
+      "nome_pt": "Cebola roxa (embalada)",
+      "row": 2,
+      "col": 0,
+      "rect": {
+        "x": 88,
+        "y": 308,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6781_3",
+      "camera_id": "6781",
+      "module": 4,
+      "side": "B",
+      "class_key": "packaged shallots",
+      "nome_pt": "Chalota (embalada)",
+      "row": 2,
+      "col": 1,
+      "rect": {
+        "x": 110,
+        "y": 308,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6781_4",
+      "camera_id": "6781",
+      "module": 4,
+      "side": "B",
+      "class_key": "chayotes",
+      "nome_pt": "Chuchu",
+      "row": 2,
+      "col": 2,
+      "rect": {
+        "x": 132,
+        "y": 308,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "area_id": "6468_1",
+      "camera_id": "6468",
+      "module": 5,
+      "side": "end",
+      "class_key": "pineapples",
+      "nome_pt": "Ananás",
+      "row": 0,
+      "col": 0,
+      "rect": {
+        "x": 22,
+        "y": 340,
+        "w": 42,
+        "h": 29
+      }
+    },
+    {
+      "area_id": "6468_2",
+      "camera_id": "6468",
+      "module": 5,
+      "side": "end",
+      "class_key": "papayas",
+      "nome_pt": "Papaia",
+      "row": 0,
+      "col": 1,
+      "rect": {
+        "x": 66,
+        "y": 340,
+        "w": 42,
+        "h": 29
+      }
+    },
+    {
+      "area_id": "6468_3",
+      "camera_id": "6468",
+      "module": 5,
+      "side": "end",
+      "class_key": "mangoes",
+      "nome_pt": "Manga",
+      "row": 0,
+      "col": 2,
+      "rect": {
+        "x": 110,
+        "y": 340,
+        "w": 42,
+        "h": 29
+      }
+    },
+    {
+      "area_id": "6468_4",
+      "camera_id": "6468",
+      "module": 5,
+      "side": "end",
+      "class_key": "guavas",
+      "nome_pt": "Goiaba",
+      "row": 1,
+      "col": 0,
+      "rect": {
+        "x": 22,
+        "y": 371,
+        "w": 42,
+        "h": 29
+      }
+    },
+    {
+      "area_id": "6468_5",
+      "camera_id": "6468",
+      "module": 5,
+      "side": "end",
+      "class_key": "bananas",
+      "nome_pt": "Banana",
+      "row": 1,
+      "col": 1,
+      "rect": {
+        "x": 66,
+        "y": 371,
+        "w": 42,
+        "h": 29
+      }
+    },
+    {
+      "area_id": "6468_6",
+      "camera_id": "6468",
+      "module": 5,
+      "side": "end",
+      "class_key": "passion fruits",
+      "nome_pt": "Maracujá",
+      "row": 1,
+      "col": 2,
+      "rect": {
+        "x": 110,
+        "y": 371,
+        "w": 42,
+        "h": 29
+      }
+    }
+  ]
+}

@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<title>Próxima tarefa</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+@keyframes ss-pulse{0%{transform:scale(.7);opacity:.6}100%{transform:scale(2.2);opacity:0}}
+@keyframes ss-ring{0%,100%{box-shadow:0 0 0 0 rgba(216,50,43,.55)}50%{box-shadow:0 0 0 6px rgba(216,50,43,0)}}
+@keyframes ss-blink{0%,100%{opacity:1}50%{opacity:.3}}
+@media (prefers-reduced-motion: reduce){*{animation:none !important}}
+button:focus-visible{outline:3px solid #27282A;outline-offset:2px;box-shadow:0 0 0 6px #F5F6F6}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; display: flex; flex-direction: column; background: #D9DBDC; color: #27282A; font-family: 'Hanken Grotesk', system-ui, sans-serif">
+
+  <header style="flex: none; height: 56px; padding: 0 16px; box-sizing: border-box; display: flex; align-items: center; gap: 12px">
+    <span role="img" aria-label="Pedro" style="flex: none; width: 40px; height: 40px; box-sizing: border-box; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #FFFFFF; border: 2px solid #27282A">
+      <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path style="fill: #27282A" d="M4 21c0-4.6 3.4-7.4 8-7.4s8 2.8 8 7.4z"></path><circle style="fill: #27282A; stroke: #FFFFFF; stroke-width: 1.6" cx="12" cy="8" r="4.4"></circle></svg>
+    </span>
+    <div style="min-width: 0; display: flex; flex-direction: column; gap: 3px">
+      <div style="display: flex; align-items: center; gap: 8px">
+        <span style="font-size: 17px; font-weight: 800; line-height: 1.1">Pedro</span>
+        <span style="padding: 2px 6px; border-radius: 6px; background: #E5E7E8; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; line-height: 1.2">ID 20417</span>
+      </div>
+      <span style="font-size: 12px; font-weight: 600; line-height: 1.2; color: #3A3C3E">Continente Bom Dia São Romão · Leiria</span>
+    </div>
+    <span role="status" style="margin-left: auto; padding: 4px 10px; border-radius: 12px; background: #27282A; color: #F5F6F6; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600">{{ progressLabel }}</span>
+  </header>
+
+  <div style="flex: none; padding: 0 16px 8px; display: flex; gap: 4px" role="img" aria-label="{{ progressLabel }} tarefas">
+    <sc-for list="{{ segments }}" as="g" hint-placeholder-count="5">
+      <span style="flex: 1; height: 6px; border-radius: 3px; {{ g.style }}"></span>
+    </sc-for>
+  </div>
+
+  <section aria-label="Planta da bancada com caminho até ao aviso" style="position: relative; flex: none; width: 390px; height: 480px; margin: 0; background: #FFFFFF; border-radius: 0 0 24px 24px; overflow: hidden">
+
+    <sc-if value="{{ hasCur }}" hint-placeholder-val="{{ true }}">
+      <svg width="390" height="480" viewBox="0 0 390 480" aria-hidden="true" style="position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none">
+        <path d="{{ routeD }}" style="fill: none; stroke: #FFFFFF; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round"></path>
+        <path d="{{ routeD }}" style="fill: none; stroke: #27282A; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 0.1 9"></path>
+      </svg>
+    </sc-if>
+
+    <div role="img" aria-label="Bancada de frutas e legumes: 5 módulos, 56 produtos" style="position: absolute; left: 119px; top: 40px; width: 152px; height: 400px">
+      <sc-for list="{{ cells }}" as="c" hint-placeholder-count="56">
+        <div style="position: absolute; box-sizing: border-box; border-radius: 2px; {{ c.style }}"></div>
+      </sc-for>
+      <sc-for list="{{ spines }}" as="p" hint-placeholder-count="5">
+        <div style="position: absolute; box-sizing: border-box; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600; {{ p.style }}">{{ p.n }}</div>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ hasCur }}" hint-placeholder-val="{{ true }}">
+      <span style="position: absolute; z-index: 5; width: 52px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: #27282A; color: #FFFFFF; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 600; {{ bubbleStyle }}">{{ distLabel }}</span>
+    </sc-if>
+
+    <sc-for list="{{ marks }}" as="k" hint-placeholder-count="5">
+      <button type="button" onClick="{{ k.select }}" aria-label="{{ k.aria }}" style="position: absolute; z-index: 7; width: 44px; height: 44px; margin: 0; padding: 0; border: 0; background: transparent; cursor: pointer; {{ k.pos }}"></button>
+    </sc-for>
+
+    <div role="img" aria-label="A tua posição, corredor A" style="position: absolute; left: 60px; top: 240px; width: 0; height: 0; z-index: 6">
+      <span style="position: absolute; left: -15px; top: -15px; width: 30px; height: 30px; border-radius: 50%; background: #27282A; animation: ss-pulse 2s ease-out infinite"></span>
+      <span style="position: absolute; left: -13px; top: -13px; width: 26px; height: 26px; box-sizing: border-box; border-radius: 50%; background: #27282A; border: 2px solid #FFFFFF; box-shadow: 0 0 0 2px #27282A; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #FFFFFF">Tu</span>
+    </div>
+  </section>
+
+  <section aria-label="Tarefa atual e avisos seguintes" style="flex: 1; min-height: 0; margin-top: 12px; padding: 10px 16px 0; display: flex; flex-direction: column; background: #F5F6F6; border-radius: 24px 24px 0 0; box-shadow: 0 -6px 24px rgba(39, 40, 42, .16)">
+    <div style="flex: none; align-self: center; width: 40px; height: 4px; margin-bottom: 8px; border-radius: 2px; background: #27282A; opacity: .25"></div>
+
+    <div style="flex: 1; min-height: 0; overflow-y: auto; padding: 0 4px 24px; display: flex; flex-direction: column; gap: 10px">
+
+      <sc-if value="{{ allDone }}" hint-placeholder-val="{{ false }}">
+        <div style="padding: 16px 8px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center">
+          <span style="width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #27282A">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" style="fill: none; stroke: #F5F6F6; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+          </span>
+          <h2 style="margin: 0; font-size: 24px; font-weight: 800">Tudo tratado</h2>
+          <p style="margin: 0; font-size: 14px; font-weight: 500; line-height: 1.4; color: #585B5E">Não há avisos ativos. Voltas a ser avisado quando entrar um novo.</p>
+          <button type="button" onClick="{{ reset }}" style="height: 48px; margin: 0; padding: 0 22px; border: 2px solid #27282A; border-radius: 24px; background: transparent; color: #27282A; font: inherit; font-size: 15px; font-weight: 800; cursor: pointer">Recomeçar demonstração</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ hasCur }}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+            <span style="display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px 0 8px; border-radius: 13px; font-size: 12px; font-weight: 800; letter-spacing: .06em; {{ cur.pillStyle }}">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="fill: none; stroke: {{ cur.ink }}; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round" aria-hidden="true"><path d="{{ cur.icon }}"></path></svg>
+              {{ cur.word }}
+            </span>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 600; color: #585B5E">{{ cur.id }} · a {{ cur.dist }} m · há {{ cur.ago }} min</span>
+          </div>
+          <h2 style="margin: 0; font-size: 26px; line-height: 1.08; font-weight: 800; letter-spacing: -.02em">{{ cur.title }}</h2>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 600; color: #585B5E">{{ cur.where }}</div>
+          <sc-if value="{{ cur.hasComplaint }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size: 14px; font-style: italic; line-height: 1.3">{{ cur.complaintText }}</div>
+          </sc-if>
+          <div style="display: flex; align-items: center; gap: 12px">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 24px; font-weight: 600; line-height: 1">{{ cur.pct }}</span>
+            <span style="flex: 1; height: 10px; border-radius: 5px; background: #DADCDD; overflow: hidden">
+              <span style="display: block; height: 100%; border-radius: 5px; background: #27282A; width: {{ cur.barW }}"></span>
+            </span>
+            <span style="font-size: 12px; font-weight: 600; color: #585B5E">de stock</span>
+          </div>
+          <div style="display: flex; gap: 10px; margin-top: 2px">
+            <button type="button" onClick="{{ finish }}" style="flex: 1.7; height: 56px; margin: 0; padding: 0 16px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 2px solid #27282A; border-radius: 28px; background: #27282A; color: #F5F6F6; font: inherit; font-size: 18px; font-weight: 800; cursor: pointer">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="fill: none; stroke: #F5F6F6; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+              Feito
+            </button>
+            <button type="button" onClick="{{ pass }}" style="flex: 1; height: 56px; margin: 0; padding: 0 12px; border: 2px solid #27282A; border-radius: 28px; background: transparent; color: #27282A; font: inherit; font-size: 16px; font-weight: 800; cursor: pointer">Passar</button>
+          </div>
+        </div>
+
+        <div style="padding-top: 6px; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #585B5E">A seguir · {{ restCount }}</div>
+        <div style="display: flex; flex-direction: column">
+          <sc-for list="{{ rest }}" as="r" hint-placeholder-count="3">
+            <button type="button" onClick="{{ r.jump }}" style="width: 100%; min-height: 52px; margin: 0; padding: 6px 0; display: flex; align-items: center; gap: 12px; border: 0; border-top: 1px solid rgba(39, 40, 42, .14); background: none; color: inherit; font: inherit; text-align: left; cursor: pointer">
+              <span style="flex: none; width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; {{ r.badgeStyle }}">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="fill: none; stroke: {{ r.ink }}; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round" aria-hidden="true"><path d="{{ r.icon }}"></path></svg>
+              </span>
+              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px">
+                <span style="font-size: 15px; font-weight: 800; line-height: 1.2">{{ r.title }}</span>
+                <span style="font-size: 12px; font-weight: 600; color: #585B5E">{{ r.meta }}</span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const done = st.done || {};
+    const skip = st.skip || 0;
+
+    // <partilhado> (o mesmo bloco nos 3 ecrãs: cores, geometria, planograma, eventos e caminho)
+    const INK = '#27282A';
+    const BASE = '#D3D5D6';
+    // Gravidade: cor do retângulo no mapa e dos distintivos (vermelho mais escuro, amarelo mais claro).
+    const SEV_BG = { 3: '#D8322B', 2: '#F28C1F', 1: '#FFD21F' };
+    const SEV_INK = { 3: '#FFFFFF', 2: INK, 1: INK };
+
+    // Geometria (px). Ilha de 152 x 400 centrada no mapa de 390 x 480, com 40 px de passagem no topo e no fundo.
+    // Todas as medidas são inteiras: intervalo de 2 px entre retângulos e 4 px entre módulos; sem linhas nem rebordos.
+    // 5 módulos: 1 e 5 = pontas (uma só face, 130 x 60); 2, 3 e 4 = duas faces (A à esquerda, B à direita, 64 x 88)
+    // com o nº do módulo numa faixa de 20 px ao meio.
+    const IX = 119, IY = 40;
+    const GAP = 2, MGAP = 4;
+    const CAP_H = 60, MOD_H = 88;
+    const SPINE_W = 20, BLOCK_W = 64, CAP_W = 130;
+    const me = { x: 60, y: 240 };
+    const AISLE_B_X = 330;
+    const CROSS_TOP = 20, CROSS_BOTTOM = 460;
+    const METERS_PER_PX = 0.03;
+
+    const ICON = {
+      3: 'M7.9 2h8.2L22 7.9v8.2L16.1 22H7.9L2 16.1V7.9z M12 8v5 M12 16.5h.01',
+      2: 'M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z M12 9v4 M12 17h.01',
+      1: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z M12 8v4 M12 16h.01',
+      all: 'M8 6h13 M8 12h13 M8 18h13 M3 6h.01 M3 12h.01 M3 18h.01'
+    };
+    const LV = {
+      3: { word: 'CRÍTICO', label: 'Crítico' },
+      2: { word: 'ALTO', label: 'Alto' },
+      1: { word: 'MÉDIO', label: 'Médio' }
+    };
+
+    // Cada retângulo pequeno = uma classe de produto (as 56 de classes.json), uma só vez em toda a planta.
+    // Cada face junta 1 ou 2 câmaras do planograma; area_id = câmara_nº (nº = posição dentro da câmara).
+    // cols x rows = nº de retângulos da face. Corredor A = fruta, corredor B = legumes, pontas = fruta.
+    const CLS = {
+      'apples': 'Maçã', 'apricots': 'Alperce', 'avocados': 'Abacate', 'bananas': 'Banana', 'broccoli': 'Brócolos',
+      'cabbages': 'Couve branca', 'cauliflower': 'Couve-flor', 'chayotes': 'Chuchu', 'collard greens': 'Couve portuguesa',
+      'cucumbers': 'Pepino', 'eggplants': 'Beringela', 'garlic': 'Alho', 'ginger': 'Gengibre', 'green beans': 'Feijão verde',
+      'green grapes': 'Uva branca', 'green peppers': 'Pimento verde', 'guavas': 'Goiaba', 'kiwis': 'Kiwi', 'lemons': 'Limão',
+      'limes': 'Lima', 'mangoes': 'Manga', 'melons': 'Melão', 'nectarines': 'Nectarina', 'onions': 'Cebola', 'oranges': 'Laranja',
+      'packaged apples': 'Maçã (embalada)', 'packaged cherries': 'Cereja (embalada)',
+      'packaged cherry tomatoes': 'Tomate cherry (embalada)', 'packaged dragon fruits': 'Pitaya (embalada)',
+      'packaged garlic': 'Alho (embalada)', 'packaged green grapes': 'Uva branca (embalada)', 'packaged kiwis': 'Kiwi (embalada)',
+      'packaged lettuce': 'Alface (embalada)', 'packaged onions': 'Cebola (embalada)', 'packaged oranges': 'Laranja (embalada)',
+      'packaged passion fruits': 'Maracujá (embalada)', 'packaged potatoes': 'Batata (embalada)',
+      'packaged red onions': 'Cebola roxa (embalada)', 'packaged shallots': 'Chalota (embalada)',
+      'packaged strawberries': 'Morango (embalada)', 'packaged tomatoes': 'Tomate (embalada)', 'papayas': 'Papaia',
+      'passion fruits': 'Maracujá', 'peaches': 'Pêssego', 'pears': 'Pera', 'pineapples': 'Ananás', 'potatoes': 'Batata',
+      'pumpkins': 'Abóbora', 'red cabbages': 'Couve roxa', 'red grapes': 'Uva vermelha', 'red onions': 'Cebola roxa',
+      'red peppers': 'Pimento vermelho', 'sweet potatoes': 'Batata-doce', 'tomatoes': 'Tomate', 'watermelons': 'Melancia',
+      'zucchini': 'Curgete'
+    };
+    const FACES = [
+      { m: 1, s: 'E', label: 'Citrinos', cols: 2, rows: 2, parts: [
+        { cam: '6215', items: ['oranges', 'packaged oranges', 'lemons', 'limes'] }] },
+      { m: 2, s: 'A', label: 'Maçãs, peras e embalados', cols: 2, rows: 3, parts: [
+        { cam: '6373', items: ['apples', 'packaged apples', 'pears'] },
+        { cam: '6385', items: ['packaged cherries', 'packaged dragon fruits', 'packaged passion fruits'] }] },
+      { m: 2, s: 'B', label: 'Folhas e couves', cols: 2, rows: 5, parts: [
+        { cam: '6383', items: ['packaged lettuce', 'collard greens', 'green beans', 'cucumbers', 'eggplants'] },
+        { cam: '6386', items: ['broccoli', 'cabbages', 'red cabbages', 'cauliflower', 'zucchini'] }] },
+      { m: 3, s: 'A', label: 'Kiwis e fruta de caroço', cols: 2, rows: 3, parts: [
+        { cam: '6376', items: ['kiwis', 'packaged kiwis', 'avocados'] },
+        { cam: '6491', items: ['apricots', 'peaches', 'nectarines'] }] },
+      { m: 3, s: 'B', label: 'Tomates, pimentos e cebolas', cols: 3, rows: 3, parts: [
+        { cam: '6443', items: ['tomatoes', 'packaged tomatoes', 'packaged cherry tomatoes', 'green peppers', 'red peppers'] },
+        { cam: '6594', items: ['onions', 'red onions', 'garlic', 'packaged garlic'] }] },
+      { m: 4, s: 'A', label: 'Melões e uvas', cols: 2, rows: 3, parts: [
+        { cam: '6371', items: ['melons', 'watermelons', 'packaged strawberries'] },
+        { cam: '6462', items: ['green grapes', 'red grapes', 'packaged green grapes'] }] },
+      { m: 4, s: 'B', label: 'Batatas e raízes', cols: 3, rows: 3, parts: [
+        { cam: '6591', items: ['potatoes', 'sweet potatoes', 'packaged potatoes', 'ginger', 'pumpkins'] },
+        { cam: '6781', items: ['packaged onions', 'packaged red onions', 'packaged shallots', 'chayotes'] }] },
+      { m: 5, s: 'E', label: 'Fruta tropical', cols: 3, rows: 2, parts: [
+        { cam: '6468', items: ['pineapples', 'papayas', 'mangoes', 'guavas', 'bananas', 'passion fruits'] }] }
+    ];
+    const cellsOf = (f) => {
+      const out = [];
+      f.parts.forEach((p) => p.items.forEach((k, i) => out.push({ id: p.cam + '_' + (i + 1), cls: k })));
+      return out;
+    };
+    const faceN = (f) => f.cols * f.rows;
+    const isCap = (m) => m === 1 || m === 5;
+    const modTop = (m) => (m === 1 ? 0 : CAP_H + MGAP + (m - 2) * (MOD_H + MGAP));
+    const faceRect = (f) => {
+      const y = modTop(f.m);
+      if (f.s === 'E') return { x: SPINE_W + GAP, y: y, w: CAP_W, h: CAP_H };
+      return { x: f.s === 'A' ? 0 : BLOCK_W + GAP + SPINE_W + GAP, y: y, w: BLOCK_W, h: MOD_H };
+    };
+    const gridOf = (f) => {
+      const r = faceRect(f);
+      return { cols: f.cols, rows: f.rows, cw: (r.w - (f.cols - 1) * GAP) / f.cols, ch: (r.h - (f.rows - 1) * GAP) / f.rows };
+    };
+    // Posição do retângulo i da face, relativa à ilha.
+    const cellPos = (f, i) => {
+      const r = faceRect(f);
+      const g = gridOf(f);
+      return { x: r.x + (i % g.cols) * (g.cw + GAP), y: r.y + Math.floor(i / g.cols) * (g.ch + GAP), w: g.cw, h: g.ch };
+    };
+    const whereOf = (f) => 'Módulo ' + f.m + (f.s === 'E' ? ' · Ponta' : ' · Corredor ' + f.s);
+
+    // Últimos eventos (area_id, stock_level, complaint?) recebidos; o nome do produto vem da classe do retângulo.
+    const EVENTS = [
+      { id: '6468_5', stock: 0, complaint: null, ago: 1 },
+      { id: '6443_3', stock: 6, complaint: 'Tomate cherry esgotado', ago: 2 },
+      { id: '6373_1', stock: 8, complaint: null, ago: 4 },
+      { id: '6591_3', stock: 52, complaint: 'Preço errado na etiqueta', ago: 6 },
+      { id: '6215_1', stock: 22, complaint: null, ago: 9 },
+      { id: '6594_3', stock: 19, complaint: null, ago: 12 }
+    ];
+
+    const sevOf = (a) => {
+      if (a.stock === 0) return 3;
+      if (a.complaint && a.stock < 10) return 3;
+      if (a.complaint || a.stock < 10) return 2;
+      if (a.stock < 25) return 1;
+      return 0;
+    };
+
+    // Caminho a pé até ao retângulo (px do mapa): face A pelo corredor A; face B e pontas contornam a ilha
+    // pela passagem do topo ou do fundo. A mesma conta serve os 3 ecrãs.
+    const plen = (pts) => {
+      let t = 0;
+      for (let i = 1; i < pts.length; i++) t += Math.abs(pts[i].x - pts[i - 1].x) + Math.abs(pts[i].y - pts[i - 1].y);
+      return t;
+    };
+    const routeOf = (face, cx, cy) => {
+      if (face.s === 'A') return [me, { x: me.x, y: cy }, { x: cx, y: cy }];
+      if (face.s === 'E') {
+        const yp = face.m === 1 ? CROSS_TOP : CROSS_BOTTOM;
+        return [me, { x: me.x, y: yp }, { x: cx, y: yp }, { x: cx, y: cy }];
+      }
+      const via = (yp) => [me, { x: me.x, y: yp }, { x: AISLE_B_X, y: yp }, { x: AISLE_B_X, y: cy }, { x: cx, y: cy }];
+      return plen(via(CROSS_TOP)) <= plen(via(CROSS_BOTTOM)) ? via(CROSS_TOP) : via(CROSS_BOTTOM);
+    };
+    const distOf = (face, cx, cy) => Math.max(1, Math.round(plen(routeOf(face, cx, cy)) * METERS_PER_PX));
+    // Onde está um evento: face, posição do retângulo, nome do produto e centro (px do mapa).
+    const place = (e) => {
+      let face = null;
+      let i = -1;
+      FACES.forEach((f) => {
+        const j = cellsOf(f).map((c) => c.id).indexOf(e.id);
+        if (j >= 0) { face = f; i = j; }
+      });
+      const p = cellPos(face, i);
+      return { face: face, i: i, name: CLS[cellsOf(face)[i].cls], cx: IX + p.x + p.w / 2, cy: IY + p.y + p.h / 2 };
+    };
+    // </partilhado>
+
+    // Um retângulo por produto: cinzento, ou pintado por paint(id) -> { bg, extra }.
+    const buildCells = (paint) => {
+      const out = [];
+      FACES.forEach((f) => {
+        cellsOf(f).forEach((c, i) => {
+          const p = cellPos(f, i);
+          const q = paint(c.id);
+          out.push({ style: 'left: ' + p.x + 'px; top: ' + p.y + 'px; width: ' + p.w + 'px; height: ' + p.h + 'px; background: ' + (q ? q.bg : BASE) + ';' + (q && q.extra ? ' ' + q.extra : '') });
+        });
+      });
+      return out;
+    };
+    // Faixas com o nº do módulo; a do módulo ativo fica escura.
+    const buildSpines = (activeM) => {
+      const out = [];
+      for (let m = 1; m <= 5; m++) {
+        const cap = isCap(m);
+        out.push({
+          n: String(m),
+          style: 'left: ' + (cap ? 0 : BLOCK_W + GAP) + 'px; top: ' + modTop(m) + 'px; width: ' + SPINE_W + 'px; height: ' + (cap ? CAP_H : MOD_H) + 'px; ' +
+            (m === activeM ? 'background: ' + INK + '; color: #FFFFFF;' : 'background: #B4B7B9; color: #2F3234;')
+        });
+      }
+      return out;
+    };
+
+    const total = EVENTS.filter((e) => sevOf(e) > 0).length;
+
+    // Depois de "Feito", o produto volta ao normal (repõe-se o stock e a reclamação fica resolvida).
+    const base = EVENTS.map((e) => {
+      const isDone = !!done[e.id];
+      const stock = (isDone && e.stock < 25) ? 100 : e.stock;
+      const complaint = isDone ? null : e.complaint;
+      const pl = place(e);
+      return {
+        id: e.id,
+        name: pl.name,
+        face: pl.face,
+        cx: pl.cx,
+        cy: pl.cy,
+        stock: stock,
+        complaint: complaint,
+        ago: e.ago,
+        sev: sevOf({ stock: stock, complaint: complaint }),
+        dist: distOf(pl.face, pl.cx, pl.cy)
+      };
+    });
+
+    const remaining = base
+      .filter((b) => b.sev > 0)
+      .sort((p, q) => (q.sev - p.sev) || (p.dist - q.dist));
+    const remainingIds = remaining.map((b) => b.id);
+    const k = remaining.length ? skip % remaining.length : 0;
+    const queue = remaining.slice(k).concat(remaining.slice(0, k));
+    const cur = queue.length ? queue[0] : null;
+    const doneCount = total - remaining.length;
+
+    const jumpTo = (id) => () => {
+      const idx = remainingIds.indexOf(id);
+      if (idx >= 0) this.setState({ skip: idx });
+    };
+
+    const byId = {};
+    base.forEach((b) => { byId[b.id] = b; });
+    const cells = buildCells((id) => {
+      const b = byId[id];
+      if (!b || b.sev === 0) return null;
+      const isCur = !!cur && cur.id === b.id;
+      let extra = 'z-index: ' + (isCur ? 3 : 1) + ';';
+      if (isCur) extra += ' outline: 3px solid ' + INK + '; outline-offset: 2px;';
+      if (isCur && b.sev === 3) extra += ' animation: ss-ring 1.8s ease-out infinite;';
+      return { bg: SEV_BG[b.sev], extra: extra };
+    });
+    const spines = buildSpines(cur ? cur.face.m : 0);
+
+    const marks = remaining.map((b) => ({
+      pos: 'left: ' + Math.round(b.cx - 22) + 'px; top: ' + Math.round(b.cy - 22) + 'px;',
+      aria: b.name + ', ' + whereOf(b.face).toLowerCase() + ', ' + LV[b.sev].label.toLowerCase(),
+      select: jumpTo(b.id)
+    }));
+
+    // Caminho do utilizador até ao produto da tarefa atual (pontinhos) e o letreiro com a distância.
+    let routeD = '';
+    let bubbleStyle = '';
+    let distLabel = '';
+    if (cur) {
+      const pts = routeOf(cur.face, cur.cx, cur.cy);
+      routeD = pts.map((p, i) => (i === 0 ? 'M' : 'L') + ' ' + p.x + ' ' + p.y).join(' ');
+      const half = plen(pts) / 2;
+      let acc = 0;
+      let mid = pts[0];
+      for (let i = 1; i < pts.length; i++) {
+        const d = Math.abs(pts[i].x - pts[i - 1].x) + Math.abs(pts[i].y - pts[i - 1].y);
+        if (d > 0 && acc + d >= half) {
+          const t = (half - acc) / d;
+          mid = { x: pts[i - 1].x + (pts[i].x - pts[i - 1].x) * t, y: pts[i - 1].y + (pts[i].y - pts[i - 1].y) * t };
+          break;
+        }
+        acc += d;
+      }
+      bubbleStyle = 'left: ' + Math.round(mid.x - 26) + 'px; top: ' + Math.round(mid.y - 12) + 'px;';
+      distLabel = cur.dist + ' m';
+    }
+
+    const verbOf = (b) => (b.stock < 25 ? 'Repor' : 'Verificar');
+
+    const curVm = cur ? {
+      id: cur.id,
+      word: LV[cur.sev].word,
+      ink: SEV_INK[cur.sev],
+      pillStyle: 'background: ' + SEV_BG[cur.sev] + '; color: ' + SEV_INK[cur.sev] + ';',
+      icon: ICON[cur.sev],
+      title: verbOf(cur) + ' ' + cur.name,
+      where: whereOf(cur.face),
+      dist: cur.dist,
+      ago: cur.ago,
+      pct: cur.stock + '%',
+      barW: cur.stock + '%',
+      hasComplaint: !!cur.complaint,
+      complaintText: cur.complaint ? 'Reclamação: “' + cur.complaint + '”' : ''
+    } : { id: '', word: '', ink: INK, pillStyle: '', icon: '', title: '', where: '', dist: 0, ago: 0, pct: '', barW: '0%', hasComplaint: false, complaintText: '' };
+
+    const rest = queue.slice(1).map((b) => ({
+      title: verbOf(b) + ' ' + b.name,
+      meta: LV[b.sev].word + ' · ' + b.id + ' · a ' + b.dist + ' m',
+      badgeStyle: 'background: ' + SEV_BG[b.sev] + ';',
+      ink: SEV_INK[b.sev],
+      icon: ICON[b.sev],
+      jump: jumpTo(b.id)
+    }));
+
+    const segments = [];
+    for (let i = 0; i < total; i++) {
+      let style = 'background: rgba(39, 40, 42, .18);';
+      if (i < doneCount) style = 'background: #27282A;';
+      else if (i === doneCount && cur) style = 'background: rgba(39, 40, 42, .55);';
+      segments.push({ style: style });
+    }
+
+    return {
+      progressLabel: (cur ? doneCount + 1 : total) + ' de ' + total,
+      segments: segments,
+      cells: cells,
+      spines: spines,
+      marks: marks,
+      routeD: routeD,
+      bubbleStyle: bubbleStyle,
+      distLabel: distLabel,
+      hasCur: !!cur,
+      allDone: !cur,
+      cur: curVm,
+      rest: rest,
+      restCount: rest.length,
+      finish: () => {
+        if (!cur) return;
+        const next = Object.assign({}, done);
+        next[cur.id] = true;
+        this.setState({ done: next, skip: 0 });
+      },
+      pass: () => {
+        if (remaining.length > 1) this.setState({ skip: (k + 1) % remaining.length });
+      },
+      reset: () => this.setState({ done: {}, skip: 0 })
+    };
+  }
+}
+</script>
+</body>
+</html>

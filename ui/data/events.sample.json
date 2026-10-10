@@ -1,0 +1,71 @@
+{
+  "_nota": "Eventos de exemplo (area_id, stock_level, complaint?) para desenvolvimento. severity, product, module e distance_m são derivados.",
+  "events": [
+    {
+      "area_id": "6468_5",
+      "stock_level": 0,
+      "complaint": null,
+      "minutes_ago": 1,
+      "severity": "critical",
+      "product": "Banana",
+      "module": 5,
+      "side": "end",
+      "distance_m": 12
+    },
+    {
+      "area_id": "6443_3",
+      "stock_level": 6,
+      "complaint": "Tomate cherry esgotado",
+      "minutes_ago": 2,
+      "severity": "critical",
+      "product": "Tomate cherry (embalada)",
+      "module": 3,
+      "side": "B",
+      "distance_m": 22
+    },
+    {
+      "area_id": "6373_1",
+      "stock_level": 8,
+      "complaint": null,
+      "minutes_ago": 4,
+      "severity": "high",
+      "product": "Maçã",
+      "module": 2,
+      "side": "A",
+      "distance_m": 6
+    },
+    {
+      "area_id": "6591_3",
+      "stock_level": 52,
+      "complaint": "Preço errado na etiqueta",
+      "minutes_ago": 6,
+      "severity": "high",
+      "product": "Batata (embalada)",
+      "module": 4,
+      "side": "B",
+      "distance_m": 22
+    },
+    {
+      "area_id": "6215_1",
+      "stock_level": 22,
+      "complaint": null,
+      "minutes_ago": 9,
+      "severity": "medium",
+      "product": "Laranja",
+      "module": 1,
+      "side": "end",
+      "distance_m": 11
+    },
+    {
+      "area_id": "6594_3",
+      "stock_level": 19,
+      "complaint": null,
+      "minutes_ago": 12,
+      "severity": "medium",
+      "product": "Alho",
+      "module": 3,
+      "side": "B",
+      "distance_m": 23
+    }
+  ]
+}

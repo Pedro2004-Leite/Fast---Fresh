@@ -1,0 +1,338 @@
+[
+  {
+    "class_key": "apples",
+    "nome_pt": "Maçã",
+    "sam3_prompt": "apples",
+    "exemplo": null
+  },
+  {
+    "class_key": "apricots",
+    "nome_pt": "Alperce",
+    "sam3_prompt": "apricots",
+    "exemplo": null
+  },
+  {
+    "class_key": "avocados",
+    "nome_pt": "Abacate",
+    "sam3_prompt": "avocados",
+    "exemplo": null
+  },
+  {
+    "class_key": "bananas",
+    "nome_pt": "Banana",
+    "sam3_prompt": "bananas",
+    "exemplo": null
+  },
+  {
+    "class_key": "broccoli",
+    "nome_pt": "Brócolos",
+    "sam3_prompt": "broccoli",
+    "exemplo": null
+  },
+  {
+    "class_key": "cabbages",
+    "nome_pt": "Couve branca",
+    "sam3_prompt": "cabbages",
+    "exemplo": null
+  },
+  {
+    "class_key": "cauliflower",
+    "nome_pt": "Couve-flor",
+    "sam3_prompt": "cauliflower",
+    "exemplo": null
+  },
+  {
+    "class_key": "chayotes",
+    "nome_pt": "Chuchu",
+    "sam3_prompt": "chayotes",
+    "exemplo": null
+  },
+  {
+    "class_key": "collard greens",
+    "nome_pt": "Couve portuguesa",
+    "sam3_prompt": "collard greens",
+    "exemplo": null
+  },
+  {
+    "class_key": "cucumbers",
+    "nome_pt": "Pepino",
+    "sam3_prompt": "cucumbers",
+    "exemplo": null
+  },
+  {
+    "class_key": "eggplants",
+    "nome_pt": "Beringela",
+    "sam3_prompt": "eggplants",
+    "exemplo": null
+  },
+  {
+    "class_key": "garlic",
+    "nome_pt": "Alho",
+    "sam3_prompt": "garlic",
+    "exemplo": null
+  },
+  {
+    "class_key": "ginger",
+    "nome_pt": "Gengibre",
+    "sam3_prompt": "ginger",
+    "exemplo": null
+  },
+  {
+    "class_key": "green beans",
+    "nome_pt": "Feijão verde",
+    "sam3_prompt": "green beans",
+    "exemplo": null
+  },
+  {
+    "class_key": "green grapes",
+    "nome_pt": "Uva branca",
+    "sam3_prompt": "green grapes",
+    "exemplo": null
+  },
+  {
+    "class_key": "green peppers",
+    "nome_pt": "Pimento verde",
+    "sam3_prompt": "green peppers",
+    "exemplo": null
+  },
+  {
+    "class_key": "guavas",
+    "nome_pt": "Goiaba",
+    "sam3_prompt": "guavas",
+    "exemplo": null
+  },
+  {
+    "class_key": "kiwis",
+    "nome_pt": "Kiwi",
+    "sam3_prompt": "kiwis",
+    "exemplo": null
+  },
+  {
+    "class_key": "lemons",
+    "nome_pt": "Limão",
+    "sam3_prompt": "lemons",
+    "exemplo": null
+  },
+  {
+    "class_key": "limes",
+    "nome_pt": "Lima",
+    "sam3_prompt": "limes",
+    "exemplo": null
+  },
+  {
+    "class_key": "mangoes",
+    "nome_pt": "Manga",
+    "sam3_prompt": "mangoes",
+    "exemplo": null
+  },
+  {
+    "class_key": "melons",
+    "nome_pt": "Melão",
+    "sam3_prompt": "melons",
+    "exemplo": null
+  },
+  {
+    "class_key": "nectarines",
+    "nome_pt": "Nectarina",
+    "sam3_prompt": "nectarines",
+    "exemplo": null
+  },
+  {
+    "class_key": "onions",
+    "nome_pt": "Cebola",
+    "sam3_prompt": "onions",
+    "exemplo": null
+  },
+  {
+    "class_key": "oranges",
+    "nome_pt": "Laranja",
+    "sam3_prompt": "oranges",
+    "exemplo": null
+  },
+  {
+    "class_key": "packaged apples",
+    "nome_pt": "Maçã (embalada)",
+    "sam3_prompt": "packaged apples",
+    "exemplo": null
+  },
+  {
+    "class_key": "packaged cherries",
+    "nome_pt": "Cereja (embalada)",
+    "sam3_prompt": "packaged cherries",
+    "exemplo": null
+  },
+  {
+    "class_key": "packaged cherry tomatoes",
+    "nome_pt": "Tomate cherry (embalada)",
+    "sam3_prompt": "packaged cherry tomatoes",
+    "exemplo": null
+  },
+  {
+    "class_key": "packaged dragon fruits",
+    "nome_pt": "Pitaya (embalada)",
+    "sam3_prompt": "packaged dragon fruits",
+    "exemplo": null
+  },
+  {
+    "class_key": "packaged garlic",
+    "nome_pt": "Alho (embalada)",
+    "sam3_prompt": "packaged garlic",
+    "exemplo": null
+  },
+  {
+    "class_key": "packaged green grapes",
+    "nome_pt": "Uva branca (embalada)",
+    "sam3_prompt": "packaged green grapes",
+    "exemplo": null
+  },
+  {
+    "class_key": "packaged kiwis",
+    "nome_pt": "Kiwi (embalada)",
+    "sam3_prompt": "packaged kiwis",
+    "exemplo": null
+  },
+  {
+    "class_key": "packaged lettuce",
+    "nome_pt": "Alface (embalada)",
+    "sam3_prompt": "packaged lettuce",
+    "exemplo": null
+  },
+  {
+    "class_key": "packaged onions",
+    "nome_pt": "Cebola (embalada)",
+    "sam3_prompt": "packaged onions",
+    "exemplo": null
+  },
+  {
+    "class_key": "packaged oranges",
+    "nome_pt": "Laranja (embalada)",
+    "sam3_prompt": "packaged oranges",
+    "exemplo": null
+  },
+  {
+    "class_key": "packaged passion fruits",
+    "nome_pt": "Maracujá (embalada)",
+    "sam3_prompt": "packaged passion fruits",
+    "exemplo": null
+  },
+  {
+    "class_key": "packaged potatoes",
+    "nome_pt": "Batata (embalada)",
+    "sam3_prompt": "packaged potatoes",
+    "exemplo": null
+  },
+  {
+    "class_key": "packaged red onions",
+    "nome_pt": "Cebola roxa (embalada)",
+    "sam3_prompt": "packaged red onions",
+    "exemplo": null
+  },
+  {
+    "class_key": "packaged shallots",
+    "nome_pt": "Chalota (embalada)",
+    "sam3_prompt": "packaged shallots",
+    "exemplo": null
+  },
+  {
+    "class_key": "packaged strawberries",
+    "nome_pt": "Morango (embalada)",
+    "sam3_prompt": "packaged strawberries",
+    "exemplo": null
+  },
+  {
+    "class_key": "packaged tomatoes",
+    "nome_pt": "Tomate (embalada)",
+    "sam3_prompt": "packaged tomatoes",
+    "exemplo": null
+  },
+  {
+    "class_key": "papayas",
+    "nome_pt": "Papaia",
+    "sam3_prompt": "papayas",
+    "exemplo": null
+  },
+  {
+    "class_key": "passion fruits",
+    "nome_pt": "Maracujá",
+    "sam3_prompt": "passion fruits",
+    "exemplo": null
+  },
+  {
+    "class_key": "peaches",
+    "nome_pt": "Pêssego",
+    "sam3_prompt": "peaches",
+    "exemplo": null
+  },
+  {
+    "class_key": "pears",
+    "nome_pt": "Pera",
+    "sam3_prompt": "pears",
+    "exemplo": null
+  },
+  {
+    "class_key": "pineapples",
+    "nome_pt": "Ananás",
+    "sam3_prompt": "pineapples",
+    "exemplo": null
+  },
+  {
+    "class_key": "potatoes",
+    "nome_pt": "Batata",
+    "sam3_prompt": "potatoes",
+    "exemplo": null
+  },
+  {
+    "class_key": "pumpkins",
+    "nome_pt": "Abóbora",
+    "sam3_prompt": "pumpkins",
+    "exemplo": null
+  },
+  {
+    "class_key": "red cabbages",
+    "nome_pt": "Couve roxa",
+    "sam3_prompt": "red cabbages",
+    "exemplo": null
+  },
+  {
+    "class_key": "red grapes",
+    "nome_pt": "Uva vermelha",
+    "sam3_prompt": "red grapes",
+    "exemplo": null
+  },
+  {
+    "class_key": "red onions",
+    "nome_pt": "Cebola roxa",
+    "sam3_prompt": "red onions",
+    "exemplo": null
+  },
+  {
+    "class_key": "red peppers",
+    "nome_pt": "Pimento vermelho",
+    "sam3_prompt": "red peppers",
+    "exemplo": null
+  },
+  {
+    "class_key": "sweet potatoes",
+    "nome_pt": "Batata-doce",
+    "sam3_prompt": "sweet potatoes",
+    "exemplo": null
+  },
+  {
+    "class_key": "tomatoes",
+    "nome_pt": "Tomate",
+    "sam3_prompt": "tomatoes",
+    "exemplo": null
+  },
+  {
+    "class_key": "watermelons",
+    "nome_pt": "Melancia",
+    "sam3_prompt": "watermelons",
+    "exemplo": null
+  },
+  {
+    "class_key": "zucchini",
+    "nome_pt": "Curgete",
+    "sam3_prompt": "zucchini",
+    "exemplo": null
+  }
+]

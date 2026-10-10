@@ -12,6 +12,7 @@ dataset/train/
 .venv/
 venv/
 
+<<<<<<< HEAD
 # Python bytecode
 __pycache__/
 *.pyc
@@ -22,3 +23,7 @@ data/
 .DS_Store
 __pycache__/
 service_data/
+=======
+# Imagens do pacote de design (referencia visual, so leitura)
+ui/design/design/png/
+>>>>>>> 9e4463b (Add Next.js UI for the shelf alerts app (screen A))

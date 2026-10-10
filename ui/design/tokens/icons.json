@@ -1,0 +1,15 @@
+{
+  "_nota": "Ícones inline (viewBox 24x24, traço 2–2.6, extremidades redondas, sem preenchimento). Ícone de gravidade: forma diferente por nível, além da cor.",
+  "severity_critical_octagon": "M7.9 2h8.2L22 7.9v8.2L16.1 22H7.9L2 16.1V7.9z M12 8v5 M12 16.5h.01",
+  "severity_high_triangle": "M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z M12 9v4 M12 17h.01",
+  "severity_medium_circle": "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z M12 8v4 M12 16h.01",
+  "list_all": "M8 6h13 M8 12h13 M8 18h13 M3 6h.01 M3 12h.01 M3 18h.01",
+  "check": "M20 6 9 17l-5-5",
+  "avatar_shoulders_fill": "M4 21c0-4.6 3.4-7.4 8-7.4s8 2.8 8 7.4z",
+  "avatar_head_circle": {
+    "cx": 12,
+    "cy": 8,
+    "r": 4.4,
+    "stroke_on_white": 1.6
+  }
+}
