@@ -1,3 +1,5 @@
+overlay/
+
 # Local agent state (per developer)
 .claude/
 
