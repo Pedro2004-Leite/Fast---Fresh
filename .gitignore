@@ -1,2 +1,11 @@
 # Local agent state (per developer)
 .claude/
+
+# Image folders (too large to push)
+output/
+overlay/
+dataset/train/
+
+# Python virtual environments
+.venv/
+venv/
