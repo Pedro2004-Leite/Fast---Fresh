@@ -71,8 +71,19 @@
   --text-percent: 24px;
 
   --animate-ring: ss-ring 1.8s ease-out infinite;
+  --animate-task-in: task-in 0.22s ease-out;
   --animate-user-pulse: ss-pulse 2s ease-out infinite;
 
+  @keyframes task-in {
+    from {
+      transform: translateX(28px);
+      opacity: 0;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
   @keyframes ss-ring {
     0%,
     100% {

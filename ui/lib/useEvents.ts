@@ -6,7 +6,6 @@ import {
   getSampleEvents,
   INCOMING_BATCHES,
   resolveReadings,
-  restoreReadings,
   type RefreshResult,
 } from "./events";
 import { levelsOf, type LevelInfo } from "./levels";
@@ -15,7 +14,7 @@ import type { AreaEvent } from "./types";
 /** Tempo simulado do pedido de atualização (ms). */
 const MOCK_LATENCY_MS = 700;
 
-type UseEvents = {
+export type UseEvents = {
   /** A leitura de cada um dos 56 retângulos. */
   events: AreaEvent[];
   /** O nível de cada retângulo (para o modo Nível do mapa). */
@@ -23,10 +22,10 @@ type UseEvents = {
   refreshing: boolean;
   /** Traz as leituras novas e envelhece as que ficam. Ignora toques enquanto já está a atualizar. */
   refresh: () => Promise<RefreshResult | null>;
-  /** Dá as áreas como resolvidas. Devolve as leituras de antes, para poder desfazer. */
-  resolve: (areaIds: string[]) => AreaEvent[];
-  /** Desfaz um "resolvido". */
-  restore: (previous: AreaEvent[]) => void;
+  /** Dá as áreas como resolvidas (definitivo). */
+  resolve: (areaIds: string[]) => void;
+  /** Volta aos dados do início (recomeçar a demonstração). */
+  reset: () => void;
 };
 
 /**
@@ -62,14 +61,15 @@ export function useEvents(): UseEvents {
   }, []);
 
   const resolve = useCallback((areaIds: string[]) => {
-    const { events: next, previous } = resolveReadings(current.current, areaIds);
-    setEvents(next);
-    return previous;
+    setEvents(resolveReadings(current.current, areaIds));
   }, []);
 
-  const restore = useCallback((previous: AreaEvent[]) => setEvents((prev) => restoreReadings(prev, previous)), []);
+  const reset = useCallback(() => {
+    nextBatch.current = 0;
+    setEvents(getSampleEvents());
+  }, []);
 
   const levels = useMemo(() => levelsOf(events), [events]);
 
-  return { events, levels, refreshing, refresh, resolve, restore };
+  return { events, levels, refreshing, refresh, resolve, reset };
 }

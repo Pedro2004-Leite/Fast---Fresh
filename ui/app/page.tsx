@@ -1,154 +1,160 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useApp } from "@/components/AppProvider";
 import { Bench } from "@/components/Bench";
-import { BottomSheet } from "@/components/BottomSheet";
-import { FilterChips, type Filter } from "@/components/FilterChips";
 import { Header } from "@/components/Header";
-import { UndoBar } from "@/components/UndoBar";
-import { WarningRow } from "@/components/WarningRow";
+import { LevelLegend } from "@/components/LevelLegend";
+import { MapTaskCard } from "@/components/MapTaskCard";
 import { cellOf, faceOf, whereOf } from "@/lib/layout";
 import { LEVEL_TEXT } from "@/lib/levels";
-import { playResolveAnimation, pulseCell } from "@/lib/resolveAnimation";
-import type { AreaEvent, Warning } from "@/lib/types";
-import { useEvents } from "@/lib/useEvents";
-import { buildWarnings, countBySeverity, sortBySeverity } from "@/lib/warnings";
+import { HEADER_H, mapLayout, STRIP_H } from "@/lib/mapLayout";
+import { geometry } from "@/lib/layout";
+import { useElementHeight } from "@/lib/useElementHeight";
+import { buildWarnings, sortBySeverity } from "@/lib/warnings";
 
-/** Topo do painel de avisos: fechado (12 px abaixo do mapa) e aberto (logo abaixo do cabeçalho). */
-const COLLAPSED_TOP = 56 + 480 + 12;
-const EXPANDED_TOP = 56 + 12;
-
-/** Ecrã A · Mapa + avisos. */
-export default function MapAndWarnings() {
-  const { events, levels, refreshing, refresh, resolve, restore } = useEvents();
+/** Ecrã A · Mapa: só o mapa. Tocar num aviso encolhe o mapa e abre a tarefa no sítio da barra de separadores. */
+export default function MapView() {
+  const { events, levels, refreshing, refresh, flow, setNavHidden, pendingSelect, clearPendingSelect } = useApp();
   const warnings = useMemo(() => sortBySeverity(buildWarnings(events)), [events]);
 
   const [selected, setSelected] = useState<string | null>(null);
-  const [filter, setFilter] = useState<Filter>("all");
-  const [claimed, setClaimed] = useState<Record<string, boolean>>({});
-  const [sheetOpen, setSheetOpen] = useState(false);
-  const [mapMode, setMapMode] = useState<"avisos" | "nivel">("avisos"); // abre nos avisos, como antes
+  const [mapMode, setMapMode] = useState<"avisos" | "nivel">("avisos"); // abre nos avisos
   const [inspected, setInspected] = useState<string | null>(null);
-  const [status, setStatus] = useState("");
-  const [undo, setUndo] = useState<{ previous: AreaEvent[]; areaId: string; name: string; id: number } | null>(null);
-  const undoSeq = useRef(0);
-  const expireUndo = useCallback(() => setUndo(null), []);
+  const [cardHeight, setCardHeight] = useState(176);
+  const [mainRef, frameHeight] = useElementHeight<HTMLElement>();
 
-  const bySeverity = countBySeverity(warnings);
-  const counts: Record<Filter, number> = { all: warnings.length, ...bySeverity };
-  const shown = filter === "all" ? warnings : warnings.filter((w) => w.severity === filter);
+  // Se o aviso selecionado saiu (resolvido), a seleção deixa de valer.
+  const selectedWarning = warnings.find((w) => w.area_id === selected) ?? null;
+  const inspectedCell = mapMode === "nivel" && inspected ? cellOf(inspected) : undefined;
+  const open = mapMode === "avisos" ? !!selectedWarning : !!inspectedCell;
 
-  const toggleSelected = (areaId: string) => setSelected((cur) => (cur === areaId ? null : areaId));
-  const toggleClaimed = (areaId: string) => setClaimed((cur) => ({ ...cur, [areaId]: !cur[areaId] }));
+  useEffect(() => {
+    setNavHidden(open);
+    return () => setNavHidden(false);
+  }, [open, setNavHidden]);
+
+  // Vindo da Lista ("Ver no mapa"): o mapa aparece inteiro e, dois quadros depois, seleciona o aviso,
+  // para a animação ser a mesma de quando se toca num retângulo (o mapa encolhe e a tarefa sobe).
+  useEffect(() => {
+    if (!pendingSelect) return;
+    const id = pendingSelect;
+    let second = 0;
+    const first = window.requestAnimationFrame(() => {
+      second = window.requestAnimationFrame(() => {
+        setSelected(id);
+        clearPendingSelect();
+      });
+    });
+    return () => {
+      window.cancelAnimationFrame(first);
+      window.cancelAnimationFrame(second);
+    };
+  }, [pendingSelect, clearPendingSelect]);
+
+  const critical = warnings.filter((w) => w.severity === "critical").length;
+  const layout = mapLayout(frameHeight, cardHeight, open);
 
   const toggleLevelView = () => {
     setMapMode((m) => (m === "avisos" ? "nivel" : "avisos"));
     setInspected(null);
+    setSelected(null);
   };
 
-  /** O que a faixa do painel diz sobre o retângulo tocado no modo Nível. */
-  const inspectedText = (() => {
-    const cell = inspected ? cellOf(inspected) : undefined;
-    if (!cell || !inspected) return null;
-    const info = levels[inspected];
-    const level = LEVEL_TEXT[info?.level ?? "none"];
-    const when = info?.level === null ? `sem imagem há ${info.minutesAgo} min` : `lida há ${info?.minutesAgo ?? 0} min`;
-    return `${cell.nome_pt} · ${whereOf(faceOf(cell))} · ${level} · ${when}`;
-  })();
-
-  /** Atualizar traz as leituras novas e envelhece as que ficam. Os "A tratar" ficam até serem resolvidos. */
   const onRefresh = async () => {
     const result = await refresh();
     if (!result) return;
     const novos = result.addedIds.length;
-    setStatus(`Atualizado: ${novos} ${novos === 1 ? "leitura nova" : "leituras novas"}.`);
+    flow.setStatus(`Atualizado: ${novos} ${novos === 1 ? "leitura nova" : "leituras novas"}.`);
   };
 
-  /** Resolvido: a bola viaja até ao mapa, o aviso sai, e há 8 s para desfazer. */
-  const onResolve = async (w: Warning, row: HTMLElement | null) => {
-    await playResolveAnimation(row, w.area_id);
-    const previous = resolve(w.areaIds);
-    setClaimed((cur) => {
-      const next = { ...cur };
-      delete next[w.area_id];
-      return next;
-    });
-    setSelected((cur) => (cur === w.area_id ? null : cur));
-    undoSeq.current += 1;
-    setUndo({ previous, areaId: w.area_id, name: w.name, id: undoSeq.current });
-    setStatus(`${w.name} resolvido.`);
-    window.requestAnimationFrame(() => w.areaIds.forEach(pulseCell));
-  };
+  const onHeight = useCallback((h: number) => setCardHeight(h), []);
 
-  const onUndo = () => {
-    if (!undo) return;
-    restore(undo.previous);
-    setClaimed((cur) => ({ ...cur, [undo.areaId]: true }));
-    setStatus(`${undo.name} reposto.`);
-    setUndo(null);
+  let content: Parameters<typeof MapTaskCard>[0]["content"] = null;
+  if (mapMode === "avisos" && selectedWarning) {
+    const w = selectedWarning;
+    content = {
+      kind: "warning",
+      warning: w,
+      claimed: !!flow.claimed[w.area_id],
+      onClaim: () => flow.toggleClaimed(w.area_id),
+      // o cartão desliza para baixo por si: aqui só esmaece
+      onResolve: (row) => flow.resolveWarning(w, row, { collapse: false }),
+    };
+  } else if (inspectedCell && inspected) {
+    const info = levels[inspected];
+    content = {
+      kind: "info",
+      title: inspectedCell.nome_pt,
+      where: whereOf(faceOf(inspectedCell)),
+      lines: [
+        LEVEL_TEXT[info?.level ?? "none"],
+        info?.level === null ? `sem imagem há ${info.minutesAgo} min` : `lida há ${info?.minutesAgo ?? 0} min`,
+      ],
+    };
+  }
+
+  const close = () => {
+    setSelected(null);
+    setInspected(null);
   };
 
   return (
-    <main className="relative mx-auto flex h-dvh w-full max-w-[390px] flex-col overflow-hidden bg-ground text-ink">
-      <Header name="Pedro" store="Continente Bom Dia São Romão" refreshing={refreshing}
-        onRefresh={onRefresh}
-        levelView={mapMode === "nivel"}
-        onToggleLevelView={toggleLevelView}
-      />
-      <p role="status" aria-live="polite" className="sr-only">
-        {status}
-      </p>
+    <main ref={mainRef} className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-x-0 top-0">
+        <Header
+          name="David"
+          store="Continente Bom Dia São Romão"
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          levelView={mapMode === "nivel"}
+          onToggleLevelView={toggleLevelView}
+        />
+      </div>
+
+      {/* A faixa do contador (ou da legenda): fica separada do mapa. */}
+      <div className="absolute inset-x-0 flex items-center px-gutter" style={{ top: HEADER_H, height: STRIP_H }}>
+        {mapMode === "nivel" ? (
+          <LevelLegend />
+        ) : (
+          <span className="rounded-full bg-ink px-3 py-1.5 text-secondary font-extrabold text-ink-on">
+            {warnings.length} {warnings.length === 1 ? "aviso" : "avisos"} · {critical} {critical === 1 ? "crítico" : "críticos"}
+          </span>
+        )}
+      </div>
 
       <section
         aria-label="Planta da zona de frutas e legumes, vista de cima"
-        inert={sheetOpen}
-        className="relative h-[480px] flex-none overflow-hidden rounded-b-sheet bg-map"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) close(); // tocar no espaço vazio à volta do mapa
+        }}
+        className="absolute inset-x-0 overflow-hidden rounded-b-sheet bg-map motion-safe:transition-[bottom] motion-safe:duration-[380ms] motion-safe:ease-[cubic-bezier(.4,0,.2,1)]"
+        style={{ top: HEADER_H + STRIP_H, bottom: layout.bottomOffset }}
       >
-        <Bench
-          warnings={warnings}
-          selectedId={selected}
-          onSelect={toggleSelected}
-          mode={mapMode}
-          levels={levels}
-          inspectedId={inspected}
-          onInspect={setInspected}
-        />
+        <div
+          className="absolute top-0 left-1/2 origin-top motion-safe:transition-transform motion-safe:duration-[380ms] motion-safe:ease-[cubic-bezier(.4,0,.2,1)]"
+          style={{
+            width: geometry.map.w,
+            height: geometry.map.h,
+            marginLeft: -geometry.map.w / 2,
+            transform: `translateY(${layout.top}px) scale(${layout.scale})`,
+          }}
+        >
+          <Bench
+            warnings={warnings}
+            selectedId={selectedWarning?.area_id ?? null}
+            onSelect={setSelected}
+            onClear={close}
+            mode={mapMode}
+            levels={levels}
+            inspectedId={inspected}
+            onInspect={setInspected}
+            scale={layout.scale}
+          />
+        </div>
       </section>
 
-      <BottomSheet
-        ariaLabel="Lista de avisos"
-        collapsedTop={COLLAPSED_TOP}
-        expandedTop={EXPANDED_TOP}
-        expanded={sheetOpen}
-        onExpandedChange={setSheetOpen}
-      >
-        <FilterChips value={filter} counts={counts} onChange={setFilter} />
-        <div className="flex-none px-1 pt-2.5 pb-1 text-secondary font-semibold text-ink-secondary">
-          {mapMode === "nivel" && inspectedText
-            ? inspectedText
-            : `${shown.length} ${shown.length === 1 ? "aviso" : "avisos"} · por gravidade e distância`}
-        </div>
-        <div className="min-h-0 flex-1 overflow-y-auto pb-6">
-          {shown.length === 0 ? (
-            <div className="px-2 py-7 text-center text-product font-semibold text-ink-secondary">
-              Sem avisos neste nível.
-            </div>
-          ) : (
-            shown.map((w) => (
-              <WarningRow
-                key={w.area_id}
-                warning={w}
-                selected={w.area_id === selected}
-                claimed={!!claimed[w.area_id]}
-                onSelect={() => toggleSelected(w.area_id)}
-                onClaim={() => toggleClaimed(w.area_id)}
-                onResolve={(row) => onResolve(w, row)}
-              />
-            ))
-          )}
-        </div>
-      </BottomSheet>
-      {undo ? <UndoBar key={undo.id} message={`${undo.name} resolvido`} onUndo={onUndo} onExpire={expireUndo} /> : null}
+      <MapTaskCard open={open} onClose={close} onHeight={onHeight} content={content} />
     </main>
   );
 }

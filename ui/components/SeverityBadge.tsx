@@ -7,6 +7,12 @@ export const SEVERITY_BG: Record<Severity, string> = {
   medium: "bg-sev-medium",
 };
 
+export const SEVERITY_INK: Record<Severity, string> = {
+  critical: "text-sev-critical-ink",
+  high: "text-sev-high-ink",
+  medium: "text-sev-medium-ink",
+};
+
 /** Distintivo de gravidade: uma bola com a cor da gravidade, sem símbolo. A palavra da gravidade vai no texto da linha. */
 export function SeverityBadge({ severity }: { severity: Severity }) {
   return (

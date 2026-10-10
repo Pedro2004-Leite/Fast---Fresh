@@ -10,6 +10,8 @@ const DONE_AT = 0.9;
 type Props = {
   ariaLabel: string;
   onResolve: () => void;
+  /** O texto do trilho (mais curto onde há pouca largura). */
+  label?: string;
 };
 
 /**
@@ -17,7 +19,7 @@ type Props = {
  * Só resolve ao chegar ao fim; se largares antes, volta ao início. Um toque simples não faz nada.
  * Para teclado e leitores de ecrã, o cursor é um botão: Enter/Espaço (ou o toque do leitor) resolve.
  */
-export function SlideToResolve({ ariaLabel, onResolve }: Props) {
+export function SlideToResolve({ ariaLabel, onResolve, label = "Deslize para dar como resolvido" }: Props) {
   const track = useRef<HTMLDivElement>(null);
   const drag = useRef<{ startX: number; startProgress: number; last: number } | null>(null);
   const [progress, setProgress] = useState(0);
@@ -80,9 +82,9 @@ export function SlideToResolve({ ariaLabel, onResolve }: Props) {
       />
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 flex items-center pl-[62px] text-secondary font-extrabold text-ink"
+        className="pointer-events-none absolute inset-0 flex items-center overflow-hidden pr-2 pl-[62px] text-secondary font-extrabold whitespace-nowrap text-ink"
       >
-        {done ? "Resolvido" : "Deslize para dar como resolvido"}
+        {done ? "Resolvido" : label}
       </span>
       <button
         type="button"

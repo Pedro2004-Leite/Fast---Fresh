@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Hanken_Grotesk, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import { AppProvider } from "@/components/AppProvider";
 
 const hanken = Hanken_Grotesk({
   variable: "--font-hanken",
@@ -27,7 +28,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="pt-PT" className={`${hanken.variable} ${plexMono.variable} h-full antialiased`}>
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        <AppProvider>{children}</AppProvider>
+      </body>
     </html>
   );
 }

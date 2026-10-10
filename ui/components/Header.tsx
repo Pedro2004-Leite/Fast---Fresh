@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { ICON_PATH } from "@/lib/icons";
 
 type Props = {
@@ -5,12 +6,14 @@ type Props = {
   store: string;
   refreshing: boolean;
   onRefresh: () => void;
-  /** O mapa mostra o nível de stock (em vez dos avisos). */
-  levelView: boolean;
-  onToggleLevelView: () => void;
+  /** O mapa mostra o nível de stock (em vez dos avisos). Só no ecrã que tem esse modo. */
+  levelView?: boolean;
+  onToggleLevelView?: () => void;
+  /** Algo à direita do nome, antes dos botões (por exemplo "1 de 6"). */
+  trailing?: ReactNode;
 };
 
-export function Header({ name, store, refreshing, onRefresh, levelView, onToggleLevelView }: Props) {
+export function Header({ name, store, refreshing, onRefresh, levelView = false, onToggleLevelView, trailing }: Props) {
   return (
     <header className="box-border flex h-header flex-none items-center gap-3 px-gutter">
       <span
@@ -27,28 +30,31 @@ export function Header({ name, store, refreshing, onRefresh, levelView, onToggle
         <span className="text-staff leading-[1.1] font-extrabold">{name}</span>
         <span className="truncate text-secondary leading-[1.2] font-semibold text-ink-sub">{store}</span>
       </div>
-      <button
-        type="button"
-        onClick={onToggleLevelView}
-        aria-pressed={levelView}
-        aria-label="Ver o nível de stock no mapa"
-        className={`m-0 ml-auto flex size-touch flex-none cursor-pointer items-center justify-center rounded-full border-2 p-0 ${
-          levelView ? "border-level-active bg-level-active text-white" : "border-ink bg-map text-ink"
-        }`}
-      >
-        <svg
-          width="22"
-          height="22"
-          viewBox="0 0 24 24"
-          fill="none"
-          className="stroke-current stroke-[2.2]"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
+      {trailing ? <div className="ml-auto flex-none">{trailing}</div> : <div className="ml-auto" />}
+      {onToggleLevelView ? (
+        <button
+          type="button"
+          onClick={onToggleLevelView}
+          aria-pressed={levelView}
+          aria-label="Ver o nível de stock no mapa"
+          className={`m-0 flex size-touch flex-none cursor-pointer items-center justify-center rounded-full border-2 p-0 ${
+            levelView ? "border-level-active bg-level-active text-white" : "border-ink bg-map text-ink"
+          }`}
         >
-          <path d={ICON_PATH.layers} />
-        </svg>
-      </button>
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            className="stroke-current stroke-[2.2]"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d={ICON_PATH.layers} />
+          </svg>
+        </button>
+      ) : null}
       <button
         type="button"
         onClick={onRefresh}

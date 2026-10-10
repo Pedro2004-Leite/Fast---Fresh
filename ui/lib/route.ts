@@ -39,3 +39,21 @@ export function routeOf(face: BenchFace, target: Point): Point[] {
 export function distanceOf(face: BenchFace, target: Point): number {
   return Math.max(1, Math.round(pathLength(routeOf(face, target)) * meters_per_px));
 }
+
+/** O ponto a meio do caminho (para o letreiro da distância). */
+export function midpointOf(points: Point[]): Point {
+  const half = pathLength(points) / 2;
+  let walked = 0;
+  for (let i = 1; i < points.length; i++) {
+    const d = Math.abs(points[i].x - points[i - 1].x) + Math.abs(points[i].y - points[i - 1].y);
+    if (d > 0 && walked + d >= half) {
+      const t = (half - walked) / d;
+      return {
+        x: points[i - 1].x + (points[i].x - points[i - 1].x) * t,
+        y: points[i - 1].y + (points[i].y - points[i - 1].y) * t,
+      };
+    }
+    walked += d;
+  }
+  return points[0];
+}

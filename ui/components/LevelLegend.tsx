@@ -7,20 +7,13 @@ const ITEMS: { level: AreaLevel; text: string }[] = [
   { level: null, text: LEVEL_TEXT.none },
 ];
 
-/** Legenda do modo Nível, na margem esquerda do mapa. */
+/** Legenda do modo Nível, em linha (na faixa por cima do mapa). */
 export function LevelLegend() {
   return (
-    <ul
-      aria-label="Legenda do nível de stock"
-      className="absolute top-[34px] left-5 m-0 flex list-none flex-col gap-1.5 p-0 font-sans text-mono-id font-bold"
-    >
+    <ul aria-label="Legenda do nível de stock" className="m-0 flex list-none flex-wrap gap-x-3 gap-y-1 p-0 font-sans text-mono-id font-bold">
       {ITEMS.map((item) => (
         <li key={item.text} className="flex items-center gap-1.5">
-          <span
-            aria-hidden="true"
-            className="inline-block h-3.5 w-[22px] rounded-cell"
-            style={{ background: levelBackground(item.level) }}
-          />
+          <span aria-hidden="true" className="inline-block h-3.5 w-[18px] rounded-cell" style={{ background: levelBackground(item.level) }} />
           {item.text}
         </li>
       ))}

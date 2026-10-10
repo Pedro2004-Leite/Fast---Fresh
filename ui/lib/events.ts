@@ -91,17 +91,8 @@ export function resolvedReading(event: AreaEvent): AreaEvent {
   };
 }
 
-/** Dá as áreas como resolvidas. Devolve as leituras de antes, para poder desfazer. */
-export function resolveReadings(events: AreaEvent[], areaIds: string[]): { events: AreaEvent[]; previous: AreaEvent[] } {
+/** Dá as áreas como resolvidas. */
+export function resolveReadings(events: AreaEvent[], areaIds: string[]): AreaEvent[] {
   const ids = new Set(areaIds);
-  return {
-    events: events.map((e) => (ids.has(e.area_id) ? resolvedReading(e) : e)),
-    previous: events.filter((e) => ids.has(e.area_id)),
-  };
-}
-
-/** Desfaz um "resolvido": volta a pôr as leituras de antes. */
-export function restoreReadings(events: AreaEvent[], previous: AreaEvent[]): AreaEvent[] {
-  const back = new Map(previous.map((e) => [e.area_id, e]));
-  return events.map((e) => back.get(e.area_id) ?? e);
+  return events.map((e) => (ids.has(e.area_id) ? resolvedReading(e) : e));
 }

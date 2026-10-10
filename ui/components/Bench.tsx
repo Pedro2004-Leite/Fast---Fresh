@@ -1,8 +1,8 @@
-import type { MouseEvent } from "react";
-import { LevelLegend } from "@/components/LevelLegend";
+import type { MouseEvent, ReactNode } from "react";
 import { SEVERITY_BG } from "@/components/SeverityBadge";
 import { SEVERITY_LABEL } from "@/lib/severity";
 import { cellAtPoint, geometry, layout, whereOf } from "@/lib/layout";
+import { userX } from "@/lib/mapLayout";
 import { warningsByArea } from "@/lib/warnings";
 import { levelBackground, LEVEL_TEXT, type LevelInfo } from "@/lib/levels";
 import type { Warning } from "@/lib/types";
@@ -12,10 +12,19 @@ type Props = {
   selectedId: string | null;
   onSelect: (areaId: string) => void;
   /** "avisos": cor da gravidade nos retângulos com aviso. "nivel": o nível de stock de todos (os avisos ficam escondidos). */
-  mode: "avisos" | "nivel";
-  levels: Record<string, LevelInfo>;
-  inspectedId: string | null;
-  onInspect: (areaId: string) => void;
+  mode?: "avisos" | "nivel";
+  levels?: Record<string, LevelInfo>;
+  inspectedId?: string | null;
+  /** Nível: toque num retângulo (ou null se tocou longe de todos). */
+  onInspect?: (areaId: string | null) => void;
+  /** Avisos: toque no mapa onde não há aviso. */
+  onClear?: () => void;
+  /** A escala a que o mapa é desenhado (para o toque e para a bolinha "Tu"). */
+  scale?: number;
+  /** Os botões de toque sobre os avisos. Desligados onde o mapa só mostra (a vista Tarefa). */
+  marks?: boolean;
+  /** Por baixo da bancada (por exemplo o caminho até ao aviso). */
+  children?: ReactNode;
 };
 
 /**
@@ -23,21 +32,38 @@ type Props = {
  * sem linhas nem rebordos. O retângulo com aviso fica da cor da gravidade; o crítico pulsa; o selecionado
  * tem contorno de 2 px. Botões de toque transparentes de 44 x 44 px sobre os retângulos com aviso.
  */
-export function Bench({ warnings, selectedId, onSelect, mode, levels, inspectedId, onInspect }: Props) {
+export function Bench({
+  warnings,
+  selectedId,
+  onSelect,
+  mode = "avisos",
+  levels = {},
+  inspectedId = null,
+  onInspect,
+  onClear,
+  scale = 1,
+  marks = true,
+  children,
+}: Props) {
   const byArea = warningsByArea(warnings);
   const { island, user_position: me, map } = geometry;
   const level = mode === "nivel";
 
-  /** No modo Nível o toque escolhe o retângulo mais perto (sem botões de 44 px a sobrepor-se). */
-  const inspectAt = (e: MouseEvent<HTMLDivElement>) => {
-    if (!level) return;
+  /** O toque no mapa. No modo Nível escolhe o retângulo mais perto (sem botões de 44 px a sobrepor-se); nos avisos, tocar onde não há aviso limpa a seleção. */
+  const tapMap = (e: MouseEvent<HTMLDivElement>) => {
+    if (!level) {
+      onClear?.();
+      return;
+    }
     const box = e.currentTarget.getBoundingClientRect();
-    const cell = cellAtPoint(e.clientX - box.left - island.x, e.clientY - box.top - island.y);
-    if (cell) onInspect(cell.area_id);
+    const k = box.width / map.w; // o mapa pode estar ampliado
+    const cell = cellAtPoint((e.clientX - box.left) / k - island.x, (e.clientY - box.top) / k - island.y);
+    onInspect?.(cell ? cell.area_id : null);
   };
 
   return (
-    <div data-bench onClick={inspectAt} className="relative mx-auto" style={{ width: map.w, height: map.h }}>
+    <div data-bench onClick={tapMap} className="relative mx-auto" style={{ width: map.w, height: map.h }}>
+      {children}
       <div
         role="img"
         aria-label={`Bancada de frutas e legumes: ${layout.spines.length} módulos, ${layout.cells.length} produtos`}
@@ -82,13 +108,16 @@ export function Bench({ warnings, selectedId, onSelect, mode, levels, inspectedI
         ))}
       </div>
 
-      {(level ? [] : warnings).map((w) => {
+      {(level || !marks ? [] : warnings).map((w) => {
         const selected = w.area_id === selectedId;
         return (
           <button
             key={w.area_id}
             type="button"
-            onClick={() => onSelect(w.area_id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(w.area_id);
+            }}
             aria-label={`${w.name}, ${whereOf(w.face).toLowerCase()}, ${SEVERITY_LABEL[w.severity].label.toLowerCase()}`}
             aria-pressed={selected}
             className="absolute z-[3] m-0 size-touch cursor-pointer border-0 bg-transparent p-0"
@@ -97,7 +126,6 @@ export function Bench({ warnings, selectedId, onSelect, mode, levels, inspectedI
         );
       })}
 
-      {level ? <LevelLegend /> : null}
       {level ? (
         <ul className="sr-only" aria-label="Nível de stock de cada produto">
           {layout.cells.map((cell) => (
@@ -113,7 +141,7 @@ export function Bench({ warnings, selectedId, onSelect, mode, levels, inspectedI
         role="img"
         aria-label="A tua posição, corredor A"
         className="absolute z-[6] size-0"
-        style={{ left: me.x, top: me.y }}
+        style={{ left: userX(scale), top: me.y }}
       >
         <span className="absolute -top-[15px] -left-[15px] size-[30px] animate-user-pulse rounded-full bg-ink" />
         <span className="absolute -top-[13px] -left-[13px] box-border flex size-[26px] items-center justify-center rounded-full border-2 border-map bg-ink text-mono-id font-extrabold text-white shadow-[0_0_0_2px_var(--color-ink)]">

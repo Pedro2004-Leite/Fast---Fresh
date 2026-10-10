@@ -38,7 +38,14 @@ function isShown(cell: HTMLElement): boolean {
   return !!top && !!top.closest("[data-bench]");
 }
 
-async function fly(dot: HTMLElement, cell: HTMLElement, row: HTMLElement): Promise<void> {
+/** Esmaece a linha sem lhe mexer na altura (o cartão do mapa desliza para baixo por si). */
+function fade(row: HTMLElement): Promise<void> {
+  return row.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, easing: "ease", fill: "forwards" }).finished.then(
+    () => undefined,
+  );
+}
+
+async function fly(dot: HTMLElement, cell: HTMLElement, row: HTMLElement, closeRow: boolean): Promise<void> {
   const from = dot.getBoundingClientRect();
   const to = cell.getBoundingClientRect();
   const size = 28;
@@ -66,17 +73,23 @@ async function fly(dot: HTMLElement, cell: HTMLElement, row: HTMLElement): Promi
     ],
     { duration: 520, easing: "cubic-bezier(.4, 0, .2, 1)", fill: "forwards" },
   );
-  await Promise.all([flight.finished, collapse(row, 200)]);
+  await Promise.all([flight.finished, closeRow ? collapse(row, 200) : fade(row)]);
   ball.remove();
 }
 
 /** Corre a animação de saída. Resolve quando a linha já se fechou. */
-export async function playResolveAnimation(row: HTMLElement | null, areaId: string): Promise<void> {
+export async function playResolveAnimation(
+  row: HTMLElement | null,
+  areaId: string,
+  options: { collapse?: boolean } = {},
+): Promise<void> {
   if (!row || reduced()) return;
   const dot = row.querySelector<HTMLElement>("[data-severity-dot]");
   const cell = cellOf(areaId);
-  if (dot && cell && isShown(cell)) await fly(dot, cell, row);
-  else await sweep(row);
+  const closeRow = options.collapse ?? true;
+  if (dot && cell && isShown(cell)) await fly(dot, cell, row, closeRow);
+  else if (closeRow) await sweep(row);
+  else await fade(row);
 }
 
 /** Um pulso à volta do retângulo que ficou tratado. */
