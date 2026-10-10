@@ -184,16 +184,18 @@ class State:
             raise ValueError(f"unknown product_id {product_id!r}")
         if not isinstance(prompt, str) or not prompt.strip():
             raise ValueError("empty prompt")
-        entry = dict(self.examples.get(product_id) or {})
-        entry["prompt"] = prompt.strip()
+        change = {"prompt": prompt.strip()}
         if image is not None or box is not None:
             if image not in self.images[product_id]:
                 raise ValueError(f"{image} is not a crop of product {product_id!r}")
             if not box or len(box) != 4 or not (box[2] > box[0] and box[3] > box[1]):
                 raise ValueError(f"bad box {box}")
-            entry["image"], entry["box"] = image, [int(v) for v in box]
+            change["image"], change["box"] = image, [int(v) for v in box]
         with self.lock:
-            self.examples[product_id] = entry
+            # re-read the file: it may have been edited elsewhere since this process started
+            if self.path.exists():
+                self.examples = json.loads(self.path.read_text())
+            self.examples[product_id] = {**(self.examples.get(product_id) or {}), **change}
             tmp = self.path.with_suffix(".tmp")
             tmp.write_text(json.dumps(self.examples, indent=2, ensure_ascii=False, sort_keys=True) + "\n")
             os.replace(tmp, self.path)
