@@ -13,7 +13,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
 DATASET = ROOT / "dataset"
-OUT = ROOT / "overlay"
+OUT = ROOT / "overlay" / "planogram_regions"
 
 CARAMEL = (232, 160, 32)
 FONT_BOLD = "/usr/share/fonts/liberation/LiberationSans-Bold.ttf"

@@ -1,0 +1,1 @@
+classes.json contain a text description (that may be sued as prompt to SAM3) and corresponding product_id.

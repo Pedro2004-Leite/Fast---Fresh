@@ -1,0 +1,208 @@
+{
+  "apple": [
+    "11919",
+    "13702",
+    "16633",
+    "19133",
+    "26786",
+    "32170",
+    "32262"
+  ],
+  "apricot": [
+    "31228"
+  ],
+  "avocado": [
+    "16429"
+  ],
+  "banana": [
+    "11908",
+    "15591",
+    "20923"
+  ],
+  "broccoli": [
+    "21178"
+  ],
+  "cabbage": [
+    "21152"
+  ],
+  "cauliflower": [
+    "21114"
+  ],
+  "chayote": [
+    "18329"
+  ],
+  "collard green": [
+    "15651"
+  ],
+  "cucumber": [
+    "11895"
+  ],
+  "eggplant": [
+    "21208"
+  ],
+  "garlic": [
+    "11916"
+  ],
+  "ginger": [
+    "22411"
+  ],
+  "green bean": [
+    "21413"
+  ],
+  "green grape": [
+    "21307"
+  ],
+  "green pepper": [
+    "11896"
+  ],
+  "guava": [
+    "30368"
+  ],
+  "kiwi": [
+    "14646"
+  ],
+  "lemon": [
+    "11889"
+  ],
+  "lime": [
+    "11890"
+  ],
+  "mango": [
+    "11913",
+    "21789"
+  ],
+  "melon": [
+    "11891",
+    "16336",
+    "30633"
+  ],
+  "nectarine": [
+    "32532"
+  ],
+  "onion": [
+    "11914"
+  ],
+  "orange": [
+    "11906",
+    "12756"
+  ],
+  "packaged apple": [
+    "20818",
+    "30491",
+    "32748",
+    "32749"
+  ],
+  "packaged cherry": [
+    "3579"
+  ],
+  "packaged cherry tomato": [
+    "18254",
+    "18533",
+    "21223",
+    "22304",
+    "23042"
+  ],
+  "packaged dragon fruit": [
+    "15835",
+    "15855"
+  ],
+  "packaged garlic": [
+    "31119"
+  ],
+  "packaged green grape": [
+    "19032"
+  ],
+  "packaged kiwi": [
+    "1164",
+    "15781",
+    "20508"
+  ],
+  "packaged lettuce": [
+    "21254"
+  ],
+  "packaged onion": [
+    "21915",
+    "22083"
+  ],
+  "packaged orange": [
+    "15730",
+    "26600"
+  ],
+  "packaged passion fruit": [
+    "25211"
+  ],
+  "packaged potato": [
+    "15753",
+    "19454",
+    "21965",
+    "22176",
+    "22193",
+    "22965"
+  ],
+  "packaged red onion": [
+    "19127"
+  ],
+  "packaged shallot": [
+    "18090"
+  ],
+  "packaged strawberry": [
+    "1156"
+  ],
+  "packaged tomato": [
+    "1267",
+    "19959"
+  ],
+  "papaya": [
+    "11892",
+    "21122"
+  ],
+  "passion fruit": [
+    "22108"
+  ],
+  "peach": [
+    "32530",
+    "32533"
+  ],
+  "pear": [
+    "11901",
+    "11909"
+  ],
+  "pineapple": [
+    "23366"
+  ],
+  "potato": [
+    "11912"
+  ],
+  "pumpkin": [
+    "15816"
+  ],
+  "red cabbage": [
+    "15653"
+  ],
+  "red grape": [
+    "15597"
+  ],
+  "red onion": [
+    "11917"
+  ],
+  "red pepper": [
+    "11897"
+  ],
+  "sweet potato": [
+    "12661"
+  ],
+  "tomato": [
+    "11898",
+    "18514",
+    "21120",
+    "21134"
+  ],
+  "watermelon": [
+    "15600",
+    "16137",
+    "16143"
+  ],
+  "zucchini": [
+    "11893"
+  ]
+}
