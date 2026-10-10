@@ -15,3 +15,10 @@ venv/
 # Python bytecode
 __pycache__/
 *.pyc
+
+weights/
+runs/
+data/
+.DS_Store
+__pycache__/
+service_data/
