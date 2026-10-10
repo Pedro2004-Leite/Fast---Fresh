@@ -97,7 +97,7 @@ def _build_registry(classes, example_images):
     return registry
 
 
-def crop_planogram(planogram_path, dataset_dir, output_dir, classes_path="classes.json",
+def crop_planogram(planogram_path, dataset_dir, output_dir, classes_path="dataset/classes.json",
                    per_camera="all", image_name=None, example_images=None):
     """Write a dataset of square crops (PNG), quad masks (uint8 .npy, 0/1) and class-registry references.
 

@@ -238,7 +238,7 @@ def _suggest_with_llm(names, pids, vocabulary):
     return suggestions
 
 
-def build_sam3_prompts(planogram_path, output_path="classes.json", use_llm=False):
+def build_sam3_prompts(planogram_path, output_path="dataset/classes.json", use_llm=False):
     """Map every distinct product_id to one SAM 3 prompt; write {prompt: [product_ids]} to output_path.
 
     The classes come only from the deterministic cleaner (PT->EN rules + packaging rule), so the
