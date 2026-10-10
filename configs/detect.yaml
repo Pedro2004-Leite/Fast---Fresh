@@ -1,0 +1,13 @@
+# Bounding-box dataset (YOLO format). Put labelled data under data/detect/:
+#   data/detect/images/{train,val}/*.jpg
+#   data/detect/labels/{train,val}/*.txt   -> "<cls> <xc> <yc> <w> <h>" normalised
+path: data/detect
+train: images/train
+val: images/val
+
+# Placeholder classes - replace with the product list from dataset/planogram.json
+# (the class ids must match the label files).
+names:
+  0: banana
+  1: orange
+  2: apple

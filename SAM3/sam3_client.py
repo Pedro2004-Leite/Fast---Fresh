@@ -6,7 +6,7 @@
     preds = sam3("photo.jpg", example_image="ref.jpg",
                  bounding_box_exemplar=[[100, 200, 900, 700]],
                  bounding_box_counter=[[100, 200, 800, 600]])
-    preds = sam3("photo.jpg", "light rock", "ref.jpg", [[100, 200, 900, 700]], GPU=1)
+    preds = sam3("photo.jpg", "light rock", "ref.jpg", [[100, 200, 900, 700]], GPU=0)
 
 This file is deliberately standalone (it imports nothing else from this repo)
 so it can be copied next to a notebook as-is.  It needs ``requests`` and

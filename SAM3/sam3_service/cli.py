@@ -12,9 +12,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="python -m sam3_service", description=__doc__)
     parser.add_argument("--checkpoint", type=Path, default=None,
                         help=f"path to sam3.pt (default: {DEFAULT_CHECKPOINT})")
-    parser.add_argument("--gpus", default="0,1",
-                        help="comma-separated torch CUDA indices, one worker each (default: 0,1; "
-                             "torch index 0 is the A6000 here, the reverse of nvidia-smi)")
+    parser.add_argument("--gpus", default="0",
+                        help="comma-separated torch CUDA indices, one worker each (default: 0 = the A6000; "
+                             "torch index 0 is the A6000 here, the reverse of nvidia-smi; the RTX 3080 is 1)")
     parser.add_argument("--image-size", type=int, default=350,
                         help=f"square side the image is fitted into before the encoder, aspect ratio "
                              f"kept (default 350). Must be a multiple of the model stride, {STRIDE}")

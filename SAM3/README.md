@@ -24,12 +24,12 @@ python-multipart, pytest, and `conceptseg` installed editable from `~/conceptseg
 
 ```bash
 cd SAM3
-~/.local/share/conceptseg/service-venv/bin/python -m sam3_service --gpus 0,1 --port 8000
+~/.local/share/conceptseg/service-venv/bin/python -m sam3_service --port 8000
 ```
 
 | flag | default | |
 |---|---|---|
-| `--gpus` | `0,1` | torch CUDA indices, one resident model each (0 = A6000, 1 = RTX 3080 here) |
+| `--gpus` | `0` | torch CUDA indices, one resident model each (0 = A6000, 1 = RTX 3080 here; A6000 only by default) |
 | `--image-size` | `350` | square the image is fitted into, **aspect ratio kept**; multiple of 14 |
 | `--checkpoint` | `weights/sam3.pt` | |
 | `--work-dir` | `service_data` | uploads and results, `jobs/<job_id>/` |
@@ -49,7 +49,7 @@ preds = sam3("photo.jpg",
              example_image="ref.jpg",
              bounding_box_exemplar=[[100, 200, 900, 700]],   # what you want
              bounding_box_counter=[[100, 200, 800, 600]],    # what you don't (optional)
-             GPU=1)                                          # None = whichever is free
+             GPU=0)                                          # None = whichever is free
 ```
 
 Signature: `sam3(target_image, text_prompt=None, example_image=None,
@@ -89,7 +89,7 @@ Visual-example tokens are cached per GPU by hash of the reference image + boxes.
 - One working resolution per service (set at start).
 - No auth; no automatic worker restart (a dead worker shows in `/health`); job
   directories are not cleaned up.
-- Pinned jobs wait for their GPU even if the other one is idle.
+- Pinned jobs wait for their GPU even if another one is idle (only relevant when `--gpus` lists several).
 - Results are the generic pass only: no vein/grain pipelines, no registry.
 
 ## Tests
