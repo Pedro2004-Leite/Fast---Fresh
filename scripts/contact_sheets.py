@@ -8,6 +8,9 @@ columns: overlay/sam3_visual/text_visual, overlay/sam3_generic_prompts/fruit, ..
     python scripts/contact_sheets.py --product 32748     # one sheet
     python scripts/contact_sheets.py                     # every product with an example
 
+Products listed in output/crops/adversarial_prompts.json get one extra column per entry, from
+overlay/sam3_adversarial/<label>/<product_id> (made by scripts/sam3_adversarial.py).
+
 Sheets go to output/contact_sheets/<product_id>.png (``--out`` to change).
 """
 from __future__ import annotations
@@ -29,6 +32,14 @@ COLUMNS = [("text_visual", lambda r, pid: OVERLAY / "sam3_visual" / "text_visual
            ("fruit", lambda r, pid: OVERLAY / "sam3_generic_prompts" / "fruit" / r["class_key"]),
            ("vegetable", lambda r, pid: OVERLAY / "sam3_generic_prompts" / "vegetable" / r["class_key"]),
            ("plastic package", lambda r, pid: OVERLAY / "sam3_generic_prompts" / "plastic package" / r["class_key"])]
+
+
+def adversarial_label(item) -> str:
+    """Same label as sam3_adversarial.py: prompt (+ " [example <product_id>]" when one is borrowed)."""
+    if isinstance(item, str):
+        return item
+    src = f"[example {item['example_from']}]" if item.get("example_from") else None
+    return " ".join(x for x in (item.get("prompt"), src) if x)
 
 
 def font(size: int) -> ImageFont.ImageFont:
@@ -68,20 +79,20 @@ def planogram_names() -> dict[str, str]:
     return {pid: " | ".join(sorted(v)) for pid, v in names.items()}
 
 
-def sheet(pid: str, name: str, ex: dict, rows: list[dict], out: Path) -> None:
+def sheet(pid: str, name: str, ex: dict, rows: list[dict], out: Path, columns=COLUMNS) -> None:
     f_big, f_mid, f_small = font(22), font(18), font(14)
     ex_img = Image.open(CROPS / ex["image"])
     ex_mask = CROPS / (ex["image"].replace("images/", "masks/").rsplit(".", 1)[0] + ".npy")
     top = [("example + box", fit(with_box(ex_img, ex["box"]))), ("example + mask", fit(with_mask(ex_img, ex_mask)))]
 
-    ncol = len(COLUMNS)
+    ncol = len(columns)
     width = PAD + ncol * (CELL + PAD)
     # rows: (filename, [image or None per column])
     body = []
     for r in rows:
         stem = Path(r["image"]).stem + ".png"
         cells = []
-        for _, where in COLUMNS:
+        for _, where in columns:
             p = where(r, pid) / stem
             cells.append(fit(Image.open(p).convert("RGB")) if p.exists() else None)
         body.append((stem, r["image"] == ex["image"], cells))
@@ -98,7 +109,7 @@ def sheet(pid: str, name: str, ex: dict, rows: list[dict], out: Path) -> None:
         d.text((x, y), label, font=f_small, fill=(160, 160, 160))
         canvas.paste(im, (x, y + 22))
     y = head_h
-    for i, (label, _) in enumerate(COLUMNS):
+    for i, (label, _) in enumerate(columns):
         d.text((PAD + i * (CELL + PAD), y), label, font=f_mid, fill=(255, 210, 120))
     y += 30
     for (stem, is_example, cells), h in zip(body, heights):
@@ -117,17 +128,22 @@ def sheet(pid: str, name: str, ex: dict, rows: list[dict], out: Path) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--product", nargs="+", default=None, help="product_ids (default: all with an example)")
+    ap.add_argument("--adversarial", type=Path, default=CROPS / "adversarial_prompts.json",
+                    help="product_id -> list of adversarial prompts (one extra column each)")
     ap.add_argument("--out", type=Path, default=ROOT / "output" / "contact_sheets")
     args = ap.parse_args()
 
     examples = json.loads((CROPS / "examples_by_product.json").read_text())
     names = planogram_names()
+    adversarial = json.loads(args.adversarial.read_text()) if args.adversarial.exists() else {}
     dataset = [json.loads(l) for l in (CROPS / "dataset.jsonl").read_text().splitlines() if l.strip()]
     for pid in args.product or sorted(examples):
         ex = examples[pid]
         rows = sorted((r for r in dataset if str(r["product_id"]) == pid), key=lambda r: r["image"])
         out = args.out / f"{pid}.png"
-        sheet(pid, names.get(pid, "(not in planogram.json)"), ex, rows, out)
+        columns = COLUMNS + [(f'"{lab}"', lambda r, pid, lab=lab: OVERLAY / "sam3_adversarial" / lab / pid)
+                             for lab in map(adversarial_label, adversarial.get(pid, []))]
+        sheet(pid, names.get(pid, "(not in planogram.json)"), ex, rows, out, columns)
         print(f"{pid}: {len(rows)} images -> {out.relative_to(ROOT)}")
 
 
