@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fruit Detector</title>
+<style>
+  :root { color-scheme: dark; --bg:#111; --fg:#eee; --red:#ff4d4d; --green:#4dff88; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px system-ui, sans-serif; }
+  main { max-width:720px; margin:0 auto; padding:16px; }
+  h1 { font-size:1.2rem; margin:0 0 12px; }
+  .stage { position:relative; width:100%; aspect-ratio:4/3; background:#000; border-radius:8px; overflow:hidden; }
+  video, canvas { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .row { display:flex; gap:12px; align-items:center; margin-top:12px; flex-wrap:wrap; }
+  button { font:inherit; padding:8px 16px; border-radius:6px; border:0; background:#2d6cdf; color:#fff; }
+  .count { font-weight:600; }
+  .red { color:var(--red); } .green { color:var(--green); }
+  #msg { color:#f90; min-height:1.2em; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Red apple and green pear detector</h1>
+  <div class="stage">
+    <video id="video" playsinline muted></video>
+    <canvas id="overlay"></canvas>
+  </div>
+  <div class="row">
+    <button id="toggle">Start camera</button>
+    <span class="count red">Red apples: <span id="nApple">0</span></span>
+    <span class="count green">Green pears: <span id="nPear">0</span></span>
+  </div>
+  <div class="row">
+    <label>Min size <input id="minSize" type="range" min="0.5" max="10" step="0.5" value="2"> <span id="minSizeVal">2</span>% of frame</label>
+  </div>
+  <p id="msg"></p>
+</main>
+
+<script>
+// Colour-segmentation detector, runs entirely in the browser.
+// Detection runs at most once per second. In between, every display frame
+// each mask is moved by block-matching tracking so it follows the phone.
+const W = 160, H = 120;                       // analysis / tracking resolution
+const ANALYSE_EVERY_MS = 1000;                // hard cap: 1 analysis per second
+const SEARCH = 10;                            // tracking search radius, px at 160x120
+const PAD = 4;                                // context around a box used as tracking template
+const MAX_MISSES = 5;
+
+const video = document.getElementById('video');
+const overlay = document.getElementById('overlay');
+const octx = overlay.getContext('2d');
+const work = document.createElement('canvas');
+work.width = W; work.height = H;
+const wctx = work.getContext('2d', { willReadFrequently: true });
+const msg = document.getElementById('msg');
+
+const CLASSES = {
+  apple: { label: 'Red apple',  color: '#ff4d4d', rgb: [255, 77, 77] },
+  pear:  { label: 'Green pear', color: '#4dff88', rgb: [77, 255, 136] },
+};
+
+function rgbToHsv(r, g, b) {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+  let h = 0;
+  if (d) {
+    if (max === r) h = ((g - b) / d) % 6;
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+    h *= 60; if (h < 0) h += 360;
+  }
+  return [h, max ? d / max : 0, max];
+}
+
+// 0 = background, 1 = red, 2 = green
+function classify(h, s, v) {
+  if (v < 0.2 || s < 0.45) return 0;
+  if (h < 14 || h > 345) return 1;
+  if (h >= 65 && h <= 125) return 2;
+  return 0;
+}
+
+function makeMaskCanvas(mask, bw, bh, kind) {
+  const c = document.createElement('canvas');
+  c.width = bw; c.height = bh;
+  const img = new ImageData(bw, bh);
+  const [r, g, b] = CLASSES[kind].rgb;
+  for (let i = 0; i < bw * bh; i++) {
+    if (mask[i]) { img.data[i * 4] = r; img.data[i * 4 + 1] = g; img.data[i * 4 + 2] = b; img.data[i * 4 + 3] = 110; }
+  }
+  c.getContext('2d').putImageData(img, 0, 0);
+  return c;
+}
+
+function components(mask, minPixels) {
+  const seen = new Uint8Array(W * H);
+  const stack = new Int32Array(W * H);
+  const members = new Int32Array(W * H);
+  const out = [];
+  for (let start = 0; start < W * H; start++) {
+    const cls = mask[start];
+    if (!cls || seen[start]) continue;
+    let sp = 0, n = 0, x0 = W, y0 = H, x1 = 0, y1 = 0;
+    stack[sp++] = start; seen[start] = 1;
+    while (sp) {
+      const p = stack[--sp], x = p % W, y = (p / W) | 0;
+      members[n++] = p;
+      if (x < x0) x0 = x; if (x > x1) x1 = x;
+      if (y < y0) y0 = y; if (y > y1) y1 = y;
+      if (x > 0     && mask[p - 1] === cls && !seen[p - 1]) { seen[p - 1] = 1; stack[sp++] = p - 1; }
+      if (x < W - 1 && mask[p + 1] === cls && !seen[p + 1]) { seen[p + 1] = 1; stack[sp++] = p + 1; }
+      if (y > 0     && mask[p - W] === cls && !seen[p - W]) { seen[p - W] = 1; stack[sp++] = p - W; }
+      if (y < H - 1 && mask[p + W] === cls && !seen[p + W]) { seen[p + W] = 1; stack[sp++] = p + W; }
+    }
+    const bw = x1 - x0 + 1, bh = y1 - y0 + 1;
+    const fill = n / (bw * bh);
+    const aspect = bw / bh;
+    // Fruit blobs are compact: reject specks, thin strips and ragged regions.
+    if (n >= minPixels && fill > 0.4 && aspect > 0.3 && aspect < 3.3) {
+      const kind = cls === 1 ? 'apple' : 'pear';
+      const m = new Uint8Array(bw * bh);
+      for (let i = 0; i < n; i++) {
+        const p = members[i];
+        m[((p / W | 0) - y0) * bw + (p % W - x0)] = 1;
+      }
+      out.push({ kind, x: x0, y: y0, w: bw, h: bh, miss: 0, maskCanvas: makeMaskCanvas(m, bw, bh, kind) });
+    }
+  }
+  return out;
+}
+
+// Reads the current frame once: returns RGBA data and a grayscale copy for tracking.
+function grabFrame() {
+  wctx.drawImage(video, 0, 0, W, H);
+  const rgba = wctx.getImageData(0, 0, W, H).data;
+  const gray = new Uint8Array(W * H);
+  for (let i = 0; i < W * H; i++) {
+    gray[i] = (rgba[i * 4] * 77 + rgba[i * 4 + 1] * 150 + rgba[i * 4 + 2] * 29) >> 8;
+  }
+  return { rgba, gray };
+}
+
+function analyse(rgba) {
+  const mask = new Uint8Array(W * H);
+  for (let i = 0; i < W * H; i++) {
+    const [h, s, v] = rgbToHsv(rgba[i * 4], rgba[i * 4 + 1], rgba[i * 4 + 2]);
+    mask[i] = classify(h, s, v);
+  }
+  const pct = parseFloat(document.getElementById('minSize').value);
+  return components(mask, Math.round(W * H * pct / 100));
+}
+
+// Block-matching tracker: finds where the patch around each detection in the
+// previous frame went in the current frame (sum of absolute differences,
+// sub-pixel refined with a parabola fit) and shifts the detection by that.
+function track(prev, cur, dets) {
+  const side = 2 * SEARCH + 1;
+  const kept = [];
+  for (const d of dets) {
+    const tx = Math.max(0, Math.floor(d.x) - PAD), ty = Math.max(0, Math.floor(d.y) - PAD);
+    const tx1 = Math.min(W, Math.ceil(d.x + d.w) + PAD), ty1 = Math.min(H, Math.ceil(d.y + d.h) + PAD);
+    const sad = new Float32Array(side * side).fill(Infinity);
+    let count = 0;
+    for (let dy = -SEARCH; dy <= SEARCH; dy++) {
+      for (let dx = -SEARCH; dx <= SEARCH; dx++) {
+        if (tx + dx < 0 || ty + dy < 0 || tx1 + dx > W || ty1 + dy > H) continue;
+        let s = 0; count = 0;
+        for (let y = ty; y < ty1; y += 2) {
+          const a = y * W, b = (y + dy) * W + dx;
+          for (let x = tx; x < tx1; x += 2) {
+            const diff = prev[a + x] - cur[b + x];
+            s += diff < 0 ? -diff : diff;
+            count++;
+          }
+        }
+        sad[(dy + SEARCH) * side + dx + SEARCH] = s;
+      }
+    }
+    // Zero motion wins ties so still scenes do not jitter.
+    let best = sad[SEARCH * side + SEARCH], bx = 0, by = 0;
+    for (let dy = -SEARCH; dy <= SEARCH; dy++) {
+      for (let dx = -SEARCH; dx <= SEARCH; dx++) {
+        const s = sad[(dy + SEARCH) * side + dx + SEARCH];
+        if (s < best) { best = s; bx = dx; by = dy; }
+      }
+    }
+    let fx = bx, fy = by;
+    if (Math.abs(bx) < SEARCH && Math.abs(by) < SEARCH) {
+      const at = (x, y) => sad[(y + SEARCH) * side + x + SEARCH];
+      const sub = (m, c, p) => {
+        const den = m - 2 * c + p;
+        return den > 0 && isFinite(den) ? (m - p) / (2 * den) : 0;
+      };
+      fx += sub(at(bx - 1, by), best, at(bx + 1, by));
+      fy += sub(at(bx, by - 1), best, at(bx, by + 1));
+    }
+    const meanErr = count ? best / count : Infinity;
+    if (meanErr > 30) {           // patch no longer matches: hold still, give up after a few misses
+      if (++d.miss > MAX_MISSES) continue;
+    } else {
+      d.miss = 0;
+      d.x += fx; d.y += fy;
+    }
+    if (d.x + d.w < 0 || d.y + d.h < 0 || d.x > W || d.y > H) continue;
+    kept.push(d);
+  }
+  return kept;
+}
+
+// The video uses object-fit: cover, so map analysis coords to displayed coords accordingly.
+function draw(dets) {
+  const cw = overlay.clientWidth, ch = overlay.clientHeight;
+  const dpr = window.devicePixelRatio || 1;
+  if (overlay.width !== cw * dpr || overlay.height !== ch * dpr) {
+    overlay.width = cw * dpr; overlay.height = ch * dpr;
+  }
+  octx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  octx.clearRect(0, 0, cw, ch);
+  const scale = Math.max(cw / W, ch / H);
+  const ox = (cw - W * scale) / 2, oy = (ch - H * scale) / 2;
+  octx.lineWidth = 3; octx.font = '600 14px system-ui';
+  octx.imageSmoothingEnabled = false;
+  for (const d of dets) {
+    const c = CLASSES[d.kind];
+    const x = ox + d.x * scale, y = oy + d.y * scale, w = d.w * scale, h = d.h * scale;
+    octx.drawImage(d.maskCanvas, x, y, w, h);
+    octx.strokeStyle = c.color; octx.strokeRect(x, y, w, h);
+    const tw = octx.measureText(c.label).width + 10;
+    octx.fillStyle = c.color; octx.fillRect(x, Math.max(0, y - 22), tw, 22);
+    octx.fillStyle = '#000'; octx.fillText(c.label, x + 5, Math.max(0, y - 22) + 16);
+  }
+}
+
+function updateCounts(dets) {
+  document.getElementById('nApple').textContent = dets.filter(d => d.kind === 'apple').length;
+  document.getElementById('nPear').textContent = dets.filter(d => d.kind === 'pear').length;
+}
+
+let running = false, stream = null;
+let dets = [], prevGray = null, lastAnalysis = -Infinity;
+
+function loop(now) {
+  if (!running) return;
+  if (video.readyState >= 2) {
+    const { rgba, gray } = grabFrame();
+    if (now - lastAnalysis >= ANALYSE_EVERY_MS) {
+      lastAnalysis = now;
+      dets = analyse(rgba);        // fresh detections replace tracked ones
+    } else if (prevGray) {
+      dets = track(prevGray, gray, dets);
+    }
+    prevGray = gray;
+    draw(dets);
+    updateCounts(dets);
+  }
+  requestAnimationFrame(loop);
+}
+
+async function start() {
+  msg.textContent = '';
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false,
+    });
+  } catch (e) {
+    msg.textContent = 'Could not open the camera: ' + e.message +
+      ' (camera access needs https or localhost).';
+    return;
+  }
+  video.srcObject = stream;
+  await video.play();
+  running = true;
+  dets = []; prevGray = null; lastAnalysis = -Infinity;
+  toggle.textContent = 'Stop camera';
+  requestAnimationFrame(loop);
+}
+
+function stop() {
+  running = false;
+  if (stream) stream.getTracks().forEach(t => t.stop());
+  video.srcObject = null;
+  octx.clearRect(0, 0, overlay.width, overlay.height);
+  toggle.textContent = 'Start camera';
+}
+
+const toggle = document.getElementById('toggle');
+toggle.addEventListener('click', () => (running ? stop() : start()));
+const minSize = document.getElementById('minSize');
+minSize.addEventListener('input', () => {
+  document.getElementById('minSizeVal').textContent = minSize.value;
+});
+</script>
+</body>
+</html>
