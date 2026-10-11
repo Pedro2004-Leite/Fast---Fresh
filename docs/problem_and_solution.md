@@ -107,6 +107,22 @@ These numbers are optimistic, because consecutive frames of the same area are ne
 
 The shelf analysis script is complete, but we have not been able to compute a challenge score for it, since the validation annotations are hidden and the train images have none. The thresholds are still defaults. That is the largest open item.
 
+### 4.7 Cost and latency
+
+We profiled the SAM 3 service on one RTX A6000. The optimum is two requests in flight: one job on the GPU while the next one is loaded. That gives 7.9 jobs per second, which is 0.126 s of GPU per job, and about 13 GiB of GPU memory. Almost all of a job is the model: 95 % of its time is GPU, 4 % is loading the image and 2 % is post-processing, and the last two overlap with the GPU. A visual example costs the same as text only (0.127 s against 0.125 s), so every job costs the same whatever the prompt.
+
+The shelf analysis makes four jobs per area (the specific product, then fruit, vegetable and plastic package), so each is 25 % of the cost: about 0.50 s of GPU per crop and about 5 s per frame of ten areas. The whole train set (1962 crops, 94 products) is about 990 GPU seconds with SAM 3. The distilled YOLO11s-seg model takes about 2.9 ms per crop at 320 px, about 5.8 GPU seconds for the same set, 174 times less.
+
+What improves efficiency, from the largest gain:
+
+1. **Use the distilled model at run time.** 174 times less time per crop, measured. SAM 3 then only labels.
+2. **Run fewer SAM 3 jobs per area.** Three of the four jobs only check that something is present. Skipping them when the specific product already covers the area, or sharing them across frames, removes up to 75 % of the cost. This has not been tested for accuracy.
+3. **Cache the masks.** A re-run with new thresholds costs no GPU.
+4. **Add GPUs for throughput.** Each GPU holds its own model. Not measured.
+5. **Do not add concurrent clients.** The GPU is already the bottleneck, so more requests only queue.
+
+The cost per product comes from these figures through `scripts/inference_cost.py` (crops x jobs x seconds x GPU price per second). The GPU is ours and its hourly price is not known, so no monetary figure is metered. As an illustration only, at an assumed 1 EUR per GPU hour the whole set costs 0.27 EUR with SAM 3 and under 0.002 EUR with YOLO. This is the argument for distilling: SAM 3 labels once, the small model runs all day.
+
 ## 5. The app for the staff
 
 The scoring explains the model; the app explains why the model's output matters. The mobile app in `ui/` (Next.js, TypeScript, Tailwind) is a single application with three views connected by a bottom bar: a Map of the bench with the warnings, a List, and a Task view that shows the next thing to do. The state is shared, so marking a warning as "being handled" in one view is visible in the others.
