@@ -13,7 +13,8 @@ const DEMO: AreaEvent[] = [
   { area_id: "6443_3", stock_level: "empty", planogram_compliant: true, complaint: "Tomate cherry esgotado", minutes_ago: 2 },
   { area_id: "6373_1", stock_level: "empty", planogram_compliant: true, complaint: null, minutes_ago: 4 },
   { area_id: "6591_3", stock_level: "half", planogram_compliant: true, complaint: "Preço errado na etiqueta", minutes_ago: 6 },
-  { area_id: "6371_2", stock_level: "full", planogram_compliant: false, complaint: null, minutes_ago: 3 },
+  { area_id: "6594_2", stock_level: "full", planogram_compliant: false, complaint: null, minutes_ago: 3 },
+  { area_id: "6371_2", stock_level: "full", planogram_compliant: true, complaint: null, minutes_ago: 3 }, // a melancia preta está certa
   { area_id: "6215_1", stock_level: "half", planogram_compliant: true, complaint: null, minutes_ago: 9 },
   { area_id: "6594_3", stock_level: "half", planogram_compliant: true, complaint: null, minutes_ago: 12 },
 ];

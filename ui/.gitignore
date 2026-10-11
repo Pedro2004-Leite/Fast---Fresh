@@ -43,3 +43,6 @@ next-env.d.ts
 # Capturas e superfícies de revisão (lavish)
 /.shots/
 /.lavish/
+
+# Video da demonstracao: vai para a Vercel, nao para o git
+/public/demo.mp4

@@ -4,13 +4,15 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useApp } from "@/components/AppProvider";
 import { Bench } from "@/components/Bench";
 import { Header } from "@/components/Header";
+import { CameraShot } from "@/components/CameraShot";
 import { LevelLegend } from "@/components/LevelLegend";
 import { MapTaskCard } from "@/components/MapTaskCard";
+import { SHOTS } from "@/lib/cameraShots";
 import { cellOf, faceOf, whereOf } from "@/lib/layout";
 import { LEVEL_TEXT } from "@/lib/levels";
 import { HEADER_H, mapLayout, STRIP_H } from "@/lib/mapLayout";
 import { geometry } from "@/lib/layout";
-import { useElementHeight } from "@/lib/useElementHeight";
+import { useElementSize } from "@/lib/useElementSize";
 import { buildWarnings, sortBySeverity } from "@/lib/warnings";
 
 /** Ecrã A · Mapa: só o mapa. Tocar num aviso encolhe o mapa e abre a tarefa no sítio da barra de separadores. */
@@ -22,12 +24,14 @@ export default function MapView() {
   const [mapMode, setMapMode] = useState<"avisos" | "nivel">("avisos"); // abre nos avisos
   const [inspected, setInspected] = useState<string | null>(null);
   const [cardHeight, setCardHeight] = useState(176);
-  const [mainRef, frameHeight] = useElementHeight<HTMLElement>();
+  const [mainRef, frame] = useElementSize<HTMLElement>({ w: 390, h: 844 });
 
   // Se o aviso selecionado saiu (resolvido), a seleção deixa de valer.
   const selectedWarning = warnings.find((w) => w.area_id === selected) ?? null;
   const inspectedCell = mapMode === "nivel" && inspected ? cellOf(inspected) : undefined;
   const open = mapMode === "avisos" ? !!selectedWarning : !!inspectedCell;
+  // A foto da câmara do aviso (se a demonstração a tiver): o mapa encosta à esquerda e a foto aparece à direita.
+  const shot = mapMode === "avisos" && selectedWarning ? SHOTS[selectedWarning.area_id] : undefined;
 
   useEffect(() => {
     setNavHidden(open);
@@ -53,7 +57,7 @@ export default function MapView() {
   }, [pendingSelect, clearPendingSelect]);
 
   const critical = warnings.filter((w) => w.severity === "critical").length;
-  const layout = mapLayout(frameHeight, cardHeight, open);
+  const layout = mapLayout(frame.h, cardHeight, open, frame.w, !!shot);
 
   const toggleLevelView = () => {
     setMapMode((m) => (m === "avisos" ? "nivel" : "avisos"));
@@ -128,16 +132,15 @@ export default function MapView() {
         onClick={(e) => {
           if (e.target === e.currentTarget) close(); // tocar no espaço vazio à volta do mapa
         }}
-        className="absolute inset-x-0 overflow-hidden rounded-b-sheet bg-map motion-safe:transition-[bottom] motion-safe:duration-[380ms] motion-safe:ease-[cubic-bezier(.4,0,.2,1)]"
-        style={{ top: HEADER_H + STRIP_H, bottom: layout.bottomOffset }}
+        className="absolute left-0 overflow-hidden rounded-b-sheet bg-map motion-safe:transition-[bottom,width] motion-safe:duration-[380ms] motion-safe:ease-[cubic-bezier(.4,0,.2,1)]"
+        style={{ top: HEADER_H + STRIP_H, bottom: layout.bottomOffset, width: layout.width }}
       >
         <div
-          className="absolute top-0 left-1/2 origin-top motion-safe:transition-transform motion-safe:duration-[380ms] motion-safe:ease-[cubic-bezier(.4,0,.2,1)]"
+          className="absolute top-0 left-0 origin-top-left motion-safe:transition-transform motion-safe:duration-[380ms] motion-safe:ease-[cubic-bezier(.4,0,.2,1)]"
           style={{
             width: geometry.map.w,
             height: geometry.map.h,
-            marginLeft: -geometry.map.w / 2,
-            transform: `translateY(${layout.top}px) scale(${layout.scale})`,
+            transform: `translate(${layout.left}px, ${layout.top}px) scale(${layout.scale})`,
           }}
         >
           <Bench
@@ -150,9 +153,12 @@ export default function MapView() {
             inspectedId={inspected}
             onInspect={setInspected}
             scale={layout.scale}
+            showUser={!shot}
           />
         </div>
       </section>
+
+      {shot && selectedWarning ? <CameraShot key={selectedWarning.area_id} shot={shot} warning={selectedWarning} /> : null}
 
       <MapTaskCard open={open} onClose={close} onHeight={onHeight} content={content} />
     </main>

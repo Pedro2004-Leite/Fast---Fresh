@@ -57,6 +57,8 @@ Hoje os dados são de exemplo (`ui/lib/events.ts`). Para dados reais, troca o co
 - **Modo Nível**: botão de camadas no cabeçalho. O mapa mostra o enchimento (azul) de cada retângulo; os avisos ficam escondidos no mapa; "sem leitura" às riscas. Abre sempre nos avisos.
 - Cores novas fora da gravidade: verde (resolver) e azul (nível).
 - **Mapa sozinho (ecrã A)**: só o mapa, a encher o ecrã (até 1,7×), com uma faixa de contador por cima. Tocar num aviso encolhe o mapa e abre a tarefa no sítio da barra de separadores (a barra desce). Fechar: tocar no mapa vazio ou no ×. Filtros e lista estão só na Lista. 
+- **Foto da câmara no Mapa**: ao tocar num aviso que tenha foto (`ui/lib/cameraShots.ts`, fotos do dataset em `ui/public/camera/`), o mapa encosta à esquerda (sem o "Tu"), a tarefa fica em baixo e a foto aparece à direita, com o retângulo do planograma a piscar e uma etiqueta do tipo de aviso. Só o "produto errado" tem texto por baixo ("Devia estar aqui: X", o nome do planograma). Tocar na foto amplia-a. Avisos sem foto mantêm o mapa como antes.
+- **Dados de demonstração**: o "produto errado" é o lugar 6594_2 (cebolas no lugar da batata vermelha, caso real do dataset). A melancia está certa. Várias etiquetas da app (`class_key`) não coincidem com o produto do planograma (por exemplo Banana é pitaya amarela no planograma); por decidir se o título do aviso passa a usar o nome do planograma.
 - **Tarefa (ecrã C)**: só a tarefa atual, num cartão compacto (cerca de 160 px) com "Deslize para resolver" e "Passar" na mesma linha; o mapa aproxima-se à zona do caminho, mas vê sempre pelo menos 322 x 318 px do desenho (para não perder a orientação), e a tarefa cabe em qualquer altura de ecrã (medido de 560 a 844 px). Sem lista "A seguir".
 
 ## Ainda por fazer

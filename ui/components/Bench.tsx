@@ -23,6 +23,8 @@ type Props = {
   scale?: number;
   /** Os botões de toque sobre os avisos. Desligados onde o mapa só mostra (a vista Tarefa). */
   marks?: boolean;
+  /** A bolinha "Tu". Escondida quando o mapa encosta à esquerda para dar lugar à foto da câmara. */
+  showUser?: boolean;
   /** Por baixo da bancada (por exemplo o caminho até ao aviso). */
   children?: ReactNode;
 };
@@ -43,6 +45,7 @@ export function Bench({
   onClear,
   scale = 1,
   marks = true,
+  showUser = true,
   children,
 }: Props) {
   const byArea = warningsByArea(warnings);
@@ -137,17 +140,19 @@ export function Bench({
         </ul>
       ) : null}
 
-      <div
-        role="img"
-        aria-label="A tua posição, corredor A"
-        className="absolute z-[6] size-0"
-        style={{ left: userX(scale), top: me.y }}
-      >
-        <span className="absolute -top-[15px] -left-[15px] size-[30px] animate-user-pulse rounded-full bg-ink" />
-        <span className="absolute -top-[13px] -left-[13px] box-border flex size-[26px] items-center justify-center rounded-full border-2 border-map bg-ink text-mono-id font-extrabold text-white shadow-[0_0_0_2px_var(--color-ink)]">
-          Tu
-        </span>
-      </div>
+      {showUser ? (
+        <div
+          role="img"
+          aria-label="A tua posição, corredor A"
+          className="absolute z-[6] size-0"
+          style={{ left: userX(scale), top: me.y }}
+        >
+          <span className="absolute -top-[15px] -left-[15px] size-[30px] animate-user-pulse rounded-full bg-ink" />
+          <span className="absolute -top-[13px] -left-[13px] box-border flex size-[26px] items-center justify-center rounded-full border-2 border-map bg-ink text-mono-id font-extrabold text-white shadow-[0_0_0_2px_var(--color-ink)]">
+            Tu
+          </span>
+        </div>
+      ) : null}
     </div>
   );
 }

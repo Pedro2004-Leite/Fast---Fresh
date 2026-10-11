@@ -46,9 +46,9 @@ describe("resolver", () => {
   });
 
   it("arrumar um produto errado fica conforme e mantém o stock", () => {
-    const wrong = base.find((e) => e.area_id === "6371_2")!;
-    const events = resolveReadings(base, ["6371_2"]);
-    const after = events.find((e) => e.area_id === "6371_2")!;
+    const wrong = base.find((e) => e.area_id === "6594_2")!;
+    const events = resolveReadings(base, ["6594_2"]);
+    const after = events.find((e) => e.area_id === "6594_2")!;
     expect(after.planogram_compliant).toBe(true);
     expect(after.stock_level).toBe(wrong.stock_level);
   });
@@ -175,5 +175,37 @@ describe("o zoom não aproxima demais", () => {
     // o caso mais curto (Kiwi, 4 m) já não chega ao máximo
     const kiwi = ws.find((w) => w.area_id === "6376_2");
     if (kiwi) expect(routeZoom(routeOf(kiwi.face, kiwi.center), kiwi.center, 390, 385).scale).toBeLessThan(1.3);
+  });
+});
+
+describe("a foto da câmara ao lado do mapa", () => {
+  it("com a foto, a bancada encosta à esquerda e cabe na coluna estreita", async () => {
+    const { mapLayout, BESIDE_MAP_W, BESIDE_MARGIN } = await import("../mapLayout");
+    const { geometry } = await import("../layout");
+    const v = mapLayout(844, 176, true, 390, true);
+    expect(v.width).toBe(BESIDE_MAP_W);
+    // a ilha começa a BESIDE_MARGIN do bordo e acaba dentro da coluna
+    expect(v.left + geometry.island.x * v.scale).toBeCloseTo(BESIDE_MARGIN, 5);
+    expect(v.left + (geometry.island.x + geometry.island.w) * v.scale).toBeLessThanOrEqual(BESIDE_MAP_W);
+    // sem foto, o mapa volta a ocupar tudo e centrado
+    const alone = mapLayout(844, 176, true, 390, false);
+    expect(alone.width).toBe(390);
+    expect(alone.left).toBeCloseTo((390 - 390 * alone.scale) / 2, 5);
+  });
+
+  it("cada foto existe, é de um retângulo da bancada e o retângulo cabe na foto", async () => {
+    const { SHOTS } = await import("../cameraShots");
+    const { existsSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    for (const [id, shot] of Object.entries(SHOTS)) {
+      expect(layout.cells.some((c) => c.area_id === id), id).toBe(true);
+      expect(existsSync(join(process.cwd(), "public", shot.image)), shot.image).toBe(true);
+      if (shot.rect) {
+        expect(shot.rect.x).toBeGreaterThanOrEqual(0);
+        expect(shot.rect.y).toBeGreaterThanOrEqual(0);
+        expect(shot.rect.x + shot.rect.w).toBeLessThanOrEqual(100);
+        expect(shot.rect.y + shot.rect.h).toBeLessThanOrEqual(100);
+      }
+    }
   });
 });

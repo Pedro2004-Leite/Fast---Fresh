@@ -12,13 +12,21 @@ export const MAX_SCALE = 1.7;
  * O tamanho do mapa no ecrã "só mapa". O mapa enche a zona livre entre a faixa e o fundo; quando se abre uma
  * tarefa, ela ocupa o sítio da barra de separadores (de baixo) e o mapa encolhe para o que sobra.
  */
-export function mapLayout(frameHeight: number, cardHeight: number, open: boolean) {
+export function mapLayout(frameHeight: number, cardHeight: number, open: boolean, frameWidth = geometry.map.w, beside = false) {
   const bottomOffset = open ? cardHeight : NAV_H;
   const areaH = Math.max(0, frameHeight - HEADER_H - STRIP_H - bottomOffset);
-  const scale = Math.min(areaH / geometry.map.h, MAX_SCALE);
+  // Com a foto da câmara ao lado, a bancada encosta à esquerda, numa coluna estreita.
+  const colW = beside ? BESIDE_MAP_W : frameWidth;
+  const fit = beside ? (colW - 2 * BESIDE_MARGIN) / geometry.island.w : Infinity;
+  const scale = Math.min(areaH / geometry.map.h, MAX_SCALE, fit);
   const top = Math.max(0, (areaH - geometry.map.h * scale) / 2);
-  return { bottomOffset, areaH, scale, top };
+  const left = beside ? BESIDE_MARGIN - geometry.island.x * scale : (frameWidth - geometry.map.w * scale) / 2;
+  return { bottomOffset, areaH, scale, top, left, width: colW };
 }
+
+/** A largura da coluna do mapa quando a foto da câmara aparece ao lado, e a folga da bancada ao bordo. */
+export const BESIDE_MAP_W = 182;
+export const BESIDE_MARGIN = 3;
 
 /** Com o mapa ampliado, a bolinha "Tu" encosta ao canto visível em vez de sair do ecrã. */
 export function userX(scale: number): number {

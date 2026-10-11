@@ -72,6 +72,7 @@
 
   --animate-ring: ss-ring 1.8s ease-out infinite;
   --animate-task-in: task-in 0.22s ease-out;
+  --animate-blink: blink 1.1s ease-in-out infinite;
   --animate-user-pulse: ss-pulse 2s ease-out infinite;
 
   @keyframes task-in {
@@ -82,6 +83,15 @@
     to {
       transform: none;
       opacity: 1;
+    }
+  }
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.15;
     }
   }
   @keyframes ss-ring {

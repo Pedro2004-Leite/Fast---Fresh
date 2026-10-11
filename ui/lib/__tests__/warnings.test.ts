@@ -83,7 +83,7 @@ describe("avisos", () => {
     const events = getSampleEvents();
     expect(events).toHaveLength(56);
     const warnings = sortBySeverity(buildWarnings(events));
-    expect(warnings[0]).toMatchObject({ area_id: "6371_2", kind: "wrong" }); // Melancia no topo
+    expect(warnings[0]).toMatchObject({ area_id: "6594_2", kind: "wrong" }); // cebolas no lugar da batata vermelha, no topo
     const by = (id: string) => warnings.find((w) => w.areaIds.includes(id));
     expect(by("6468_5")?.severity).toBe("critical"); // Banana vazia
     expect(by("6443_3")?.severity).toBe("critical"); // Tomate cherry vazio
